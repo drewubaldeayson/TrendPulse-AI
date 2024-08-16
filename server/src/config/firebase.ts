@@ -1,5 +1,7 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 
+import { initializeApp } from "firebase/app";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -8,8 +10,6 @@ import {
   sendEmailVerification,
   sendPasswordResetEmail,
 } from "firebase/auth";
-
-import firebase from "firebase/app";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -20,12 +20,18 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+
+if (!app) {
+  throw new Error("Failed to initialize Firebase app");
+}
+
+const auth = getAuth(app);
 
 export {
   getAuth,
-  signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
   signOut,
   sendEmailVerification,
   sendPasswordResetEmail,
