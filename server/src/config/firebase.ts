@@ -1,5 +1,15 @@
 require("dotenv").config();
-const firebase = require("firebase/app");
+
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+
+import firebase from "firebase/app";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -11,3 +21,12 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+
+export {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+};

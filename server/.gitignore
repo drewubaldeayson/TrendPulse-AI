@@ -5,3 +5,6 @@
 
 # env files
 .env
+
+# dist files
+/dist
