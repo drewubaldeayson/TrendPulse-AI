@@ -1,12 +1,16 @@
 import express, { Request, Response } from "express";
-import cookieparser from "cookie-parser";
+import admin from "firebase-admin";
 import dotenv from "dotenv";
-
+import serviceAccount from "../serviceAccount.json";
 dotenv.config();
+
 const app = express();
 
-app.use(express.json());
-app.use(cookieparser());
+app.use(express());
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+});
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
