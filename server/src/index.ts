@@ -1,14 +1,9 @@
 import express, { Request, Response } from "express";
-import admin from "firebase-admin";
-import { serviceAccount } from "./firebase";
+import { admin } from "./firebase";
 
 const app = express();
 
 app.use(express());
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
 
 app.get("/", (req: Request, res: Response) => {
   admin
