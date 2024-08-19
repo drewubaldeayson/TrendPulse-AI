@@ -1,13 +1,18 @@
 import express, { Request, Response } from "express";
 import { admin } from "./firebase";
 import dotenv from "dotenv";
+import { chatgpt } from "./chatgpt";
 dotenv.config();
 
 const app = express();
 
 app.use(express());
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", async (req: Request, res: Response) => {
+  const { choices } = await chatgpt.chat.completions.create({
+    messages: [{ role: "user", content: "Say this is a test" }],
+    model: "gpt-3.5-turbo",
+  });
   admin
     .auth()
     .listUsers()
@@ -19,7 +24,7 @@ app.get("/", (req: Request, res: Response) => {
           displayName: user.displayName,
         };
       });
-      res.json(usersData);
+      res.json({ usersData, choices });
     })
     .catch((error) => {
       console.error("Error listing users:", error);
