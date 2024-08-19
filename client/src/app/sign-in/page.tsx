@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase/config";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
 
-export default function SignUp() {
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [createUserWithEmailAndPassword, user, _loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, _loading, error] =
+    useSignInWithEmailAndPassword(auth);
 
   const router = useRouter();
 
@@ -25,22 +25,13 @@ export default function SignUp() {
   }, [error]);
 
   const handleSignUp = async () => {
-    await createUserWithEmailAndPassword(email, password);
+    await signInWithEmailAndPassword(email, password);
     setEmail("");
     setPassword("");
   };
 
-  if (error) {
-    console.error(error);
-  }
-
-  if (user) {
-    console.log(user);
-    router.push("/");
-  }
-
   return (
-    <div className="bg-white text-black">
+    <div className="App">
       <input
         type="email"
         value={email}
@@ -51,7 +42,7 @@ export default function SignUp() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleSignUp}>Sign Up</button>
+      <button onClick={handleSignUp}>Sign In</button>
     </div>
   );
 }
