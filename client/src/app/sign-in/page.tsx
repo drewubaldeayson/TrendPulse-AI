@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { auth } from "@/firebase/config";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -10,39 +10,35 @@ export default function SignIn() {
   const [signInWithEmailAndPassword, user, _loading, error] =
     useSignInWithEmailAndPassword(auth);
 
-  const router = useRouter();
-
   useEffect(() => {
     if (user) {
-      router.push("/");
+      setEmail("");
+      setPassword("");
+      sessionStorage.setItem("user", "true");
     }
   }, [user]);
 
-  useEffect(() => {
-    if (error) {
-      console.error(error);
-    }
-  }, [error]);
-
-  const handleSignUp = async () => {
-    await signInWithEmailAndPassword(email, password);
-    setEmail("");
-    setPassword("");
-  };
-
   return (
-    <div className="App">
+    <div>
       <input
         type="email"
         value={email}
+        placeholder="Email"
         onChange={(e) => setEmail(e.target.value)}
       />
       <input
         type="password"
         value={password}
+        placeholder="Password"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleSignUp}>Sign In</button>
+      <button onClick={() => signInWithEmailAndPassword(email, password)}>
+        Sign In
+      </button>
+      {error && <p>{error.message}</p>}
+      <Link href="/sign-up" className="underline">
+        <p>Don't have an account?</p>
+      </Link>
     </div>
   );
 }
