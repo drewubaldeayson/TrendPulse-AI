@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -9,10 +8,11 @@ export default function RedirectLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const pathname = usePathname();
-  const userSession = sessionStorage.getItem("user");
+  const userSession =
+    typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
 
   useEffect(() => {
     const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
@@ -24,6 +24,10 @@ export default function RedirectLayout({
       router.push("/sign-in");
     }
   }, [user, pathname, userSession]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return <>{children}</>;
 }
