@@ -1,5 +1,7 @@
 import express, { Request, Response } from "express";
 import { admin } from "./firebase";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
