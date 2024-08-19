@@ -3,10 +3,10 @@ import { auth } from "@/firebase/config";
 import { signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import axios from "axios";
 
 export default function Home() {
   const [user] = useAuthState(auth);
-
   const [idToken, setIdToken] = useState<string | null>(null);
 
   useEffect(() => {
@@ -18,6 +18,20 @@ export default function Home() {
     };
     getIdTokenAsync();
   }, [user]);
+
+  useEffect(() => {
+    if (idToken) {
+      axios
+        .get("http://localhost:5000/healthcheck", {
+          headers: {
+            Authorization: idToken,
+          },
+        })
+        .then((response) => response.data)
+        .then((data) => console.log(data))
+        .catch((error) => console.error(error));
+    }
+  }, [idToken]);
 
   return (
     <main>

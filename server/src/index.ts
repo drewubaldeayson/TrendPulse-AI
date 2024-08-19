@@ -1,10 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
 import { admin } from "./firebase";
-import dotenv from "dotenv";
 import { chatgpt } from "./chatgpt";
+import cors from "cors";
+import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 app.use(express.json());
 
@@ -36,13 +43,9 @@ const isAuthenticated = (
     });
 };
 
-app.get(
-  "/",
-  isAuthenticated,
-  async (req: AuthenticatedRequest, res: Response) => {
-    res.send("Authenticated route");
-  }
-);
+app.get("/healthcheck", isAuthenticated, (req, res) => {
+  res.send("Health check OK");
+});
 
 const PORT = process.env.PORT || 8080;
 
