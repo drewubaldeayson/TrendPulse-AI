@@ -5,6 +5,7 @@ import { signOut } from "firebase/auth";
 export default function LogoutButton() {
   return (
     <button
+      className="underline"
       onClick={() => {
         signOut(auth);
         sessionStorage.removeItem("user");

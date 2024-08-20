@@ -44,18 +44,46 @@ const isAuthenticated = (
     });
 };
 
-// Health Check Endpoint
+// Get all messages
 app.get(
-  "/healthcheck",
+  "/api/messages",
   isAuthenticated,
-  (req: AuthenticatedRequest, res: Response) => {
-    res.send("Health check OK");
+  async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user?.uid;
+
+    if (!userId) {
+      return res.status(400).json({ error: "Missing user ID" });
+    }
+
+    try {
+      // Reference to the Firestore collection for this user's conversation
+      const messagesRef = firestore
+        .collection("conversations")
+        .doc(userId)
+        .collection("messages");
+
+      // Fetch all messages
+      const snapshot = await messagesRef.orderBy("timestamp").get();
+      const messages = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          role: data.role,
+          content: data.content,
+        };
+      });
+
+      // Send messages back to the user
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 );
 
-// ChatGPT Endpoint
+// Post a new message
 app.post(
-  "/chatgpt",
+  "/api/messages",
   isAuthenticated,
   async (req: AuthenticatedRequest, res: Response) => {
     const { message } = req.body;
@@ -108,6 +136,15 @@ app.post(
       console.error("Error handling message:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
+  }
+);
+
+// Health Check
+app.get(
+  "/api/healthcheck",
+  isAuthenticated,
+  (req: AuthenticatedRequest, res: Response) => {
+    res.send("Health check OK");
   }
 );
 
