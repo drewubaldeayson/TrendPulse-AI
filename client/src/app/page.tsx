@@ -58,12 +58,19 @@ export default function Home() {
   return (
     <main>
       <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            <span className="capitalize">{message.role}: </span>
-            {message.content}
+        {messages.length === 0 ? (
+          <li>
+            <span className="capitalize">assistant: </span>
+            Hi! Ask me anything.
           </li>
-        ))}
+        ) : (
+          messages.map((message, index) => (
+            <li key={index}>
+              <span className="capitalize">{message.role}: </span>
+              {message.content}
+            </li>
+          ))
+        )}
       </ul>
       <form onSubmit={sendMessage}>
         <input
