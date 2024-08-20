@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
-import { admin } from "./firebase";
-import { chatgpt } from "./chatgpt";
+import { admin, firestore } from "./firebase";
 import cors from "cors";
 import dotenv from "dotenv";
+import { getChatGPTResponse } from "./chatgpt";
 dotenv.config();
 
 const app = express();
@@ -27,7 +27,8 @@ const isAuthenticated = (
   const token = req.headers.authorization;
 
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
+    console.error("No token found");
+    return res.status(401).json({ error: "No token found" });
   }
 
   admin
@@ -43,9 +44,65 @@ const isAuthenticated = (
     });
 };
 
-app.get("/healthcheck", isAuthenticated, (req, res) => {
-  res.send("Health check OK");
-});
+// Health Check Endpoint
+app.get(
+  "/healthcheck",
+  isAuthenticated,
+  (req: AuthenticatedRequest, res: Response) => {
+    res.send("Health check OK");
+  }
+);
+
+// ChatGPT Endpoint
+app.post(
+  "/chatgpt",
+  isAuthenticated,
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { message } = req.body;
+    const userId = req.user?.uid;
+
+    if (!message || !userId) {
+      return res.status(400).json({ error: "Missing message or user ID" });
+    }
+
+    try {
+      // Reference to the Firestore collection for this user's conversation
+      const messagesRef = firestore
+        .collection("conversations")
+        .doc(userId)
+        .collection("messages");
+
+      // Fetch existing messages
+      const snapshot = await messagesRef.orderBy("timestamp").get();
+      const messages = snapshot.docs.map((doc) => doc.data());
+
+      // Add user message to Firestore
+      await messagesRef.add({
+        role: "user",
+        content: message,
+        timestamp: new Date(),
+      });
+
+      // Get response from ChatGPT
+      const chatGPTResponse = await getChatGPTResponse([
+        { role: "user", content: message },
+      ]);
+
+      // Add ChatGPT response to Firestore
+      await messagesRef.add({
+        role: "assistant",
+        content: chatGPTResponse,
+        timestamp: new Date(),
+      });
+
+      // Send response back to the user
+      res.send(chatGPTResponse);
+    } catch (error) {
+      console.error("Error handling message:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
 
 const PORT = process.env.PORT || 8080;
 
