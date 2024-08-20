@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import RedirectLayout from "@/firebase/redirectLayout";
+import LogoutButton from "@/components/LogoutButton";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <RedirectLayout>{children}</RedirectLayout>
+        <RedirectLayout>
+          <LogoutButton />
+          {children}
+        </RedirectLayout>
       </body>
     </html>
   );

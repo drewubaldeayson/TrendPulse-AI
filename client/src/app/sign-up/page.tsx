@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { auth } from "@/firebase/config";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import Link from "next/link";
+import { getIdToken } from "firebase/auth";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -11,11 +12,14 @@ export default function SignUp() {
     useCreateUserWithEmailAndPassword(auth);
 
   useEffect(() => {
-    if (user) {
-      setEmail("");
-      setPassword("");
-      sessionStorage.setItem("user", "true");
-    }
+    const signUp = async () => {
+      if (user) {
+        const token = await user.user.getIdToken();
+        setEmail("");
+        setPassword("");
+        sessionStorage.setItem("user", token);
+      }
+    };
   }, [user]);
 
   return (

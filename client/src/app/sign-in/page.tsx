@@ -11,11 +11,15 @@ export default function SignIn() {
     useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {
-    if (user) {
-      setEmail("");
-      setPassword("");
-      sessionStorage.setItem("user", "true");
-    }
+    const signIn = async () => {
+      if (user) {
+        const token = await user.user.getIdToken();
+        setEmail("");
+        setPassword("");
+        sessionStorage.setItem("user", token);
+      }
+    };
+    signIn();
   }, [user]);
 
   return (
