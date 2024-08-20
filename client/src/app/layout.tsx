@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
-import RedirectLayout from "@/firebase/redirectLayout";
+import RedirectLayout from "@/firebase/RedirectLayout";
 import { cn } from "@/lib/utils";
+import Header from "@/components/Header";
 
 const fontSans = FontSans({
   weight: "400",
@@ -28,6 +29,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Header />
         <RedirectLayout>{children}</RedirectLayout>
       </body>
     </html>

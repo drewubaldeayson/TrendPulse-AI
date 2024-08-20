@@ -1,9 +1,8 @@
 "use client";
-import { useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { usePathname, useRouter } from "next/navigation";
 import { auth } from "@/firebase/config";
-import LogoutButton from "@/components/LogoutButton";
+import { useEffect } from "react";
 
 export default function RedirectLayout({
   children,
@@ -13,45 +12,42 @@ export default function RedirectLayout({
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const pathname = usePathname();
+
+  // Retrieve the session token from sessionStorage
   const userSession =
     typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
 
-  useEffect(() => {
-    const authenticate = async () => {
-      const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
-      const isAuthenticated = !!user || !!userSession;
-
-      if (user && !userSession) {
-        sessionStorage.setItem("user", await user.getIdToken());
-      }
-
-      if (isAuthenticated && isOnAuthPage) {
-        router.push("/");
-      } else if (!isAuthenticated && !isOnAuthPage) {
-        router.push("/sign-in");
-      }
-    };
-
-    authenticate();
-  }, [user, userSession, pathname, router]); // No authChecked dependency
-
-  if (loading) {
-    return <p className="hidden">Loading...</p>;
-  }
-
-  // If the user is not authenticated and is not on the auth page, redirect
-  const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
+  // Define whether the user is authenticated or not
   const isAuthenticated = !!user || !!userSession;
 
-  if (!isAuthenticated && !isOnAuthPage) {
-    router.push("/sign-in");
-    return null; // Prevents rendering of children while redirecting
+  // Define whether the current page is an authentication page (sign-in or sign-up)
+  const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
+
+  useEffect(() => {
+    // Store the user token in sessionStorage if logged in and session not yet stored
+    if (user && !userSession) {
+      user.getIdToken().then((token) => sessionStorage.setItem("user", token));
+    }
+  }, [user, userSession]);
+
+  // Prevent rendering when loading
+  if (loading) {
+    return null;
   }
 
-  return (
-    <>
-      {user && <LogoutButton />}
-      {children}
-    </>
-  );
+  // Redirect authenticated users away from the auth pages
+  if (isAuthenticated && isOnAuthPage) {
+    router.push("/");
+    return null; // Prevent rendering children during redirect
+  }
+
+  // Redirect unauthenticated users trying to access non-auth pages
+  if (!isAuthenticated && !isOnAuthPage) {
+    router.push("/sign-in");
+    // Prevent rendering children during redirect
+    return null;
+  }
+
+  // Render the children when everything is fine
+  return <>{children}</>;
 }
