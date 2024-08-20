@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/config";
+import LogoutButton from "@/components/LogoutButton";
+
 export default function RedirectLayout({
   children,
 }: {
@@ -17,23 +19,39 @@ export default function RedirectLayout({
   useEffect(() => {
     const authenticate = async () => {
       const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
-      const isAuthenticated = user || userSession;
+      const isAuthenticated = !!user || !!userSession;
 
-      if (!userSession && user) {
+      if (user && !userSession) {
         sessionStorage.setItem("user", await user.getIdToken());
       }
+
       if (isAuthenticated && isOnAuthPage) {
         router.push("/");
       } else if (!isAuthenticated && !isOnAuthPage) {
         router.push("/sign-in");
       }
     };
+
     authenticate();
-  }, [user, userSession]);
+  }, [user, userSession, pathname, router]); // No authChecked dependency
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="hidden">Loading...</p>;
   }
 
-  return <>{children}</>;
+  // If the user is not authenticated and is not on the auth page, redirect
+  const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
+  const isAuthenticated = !!user || !!userSession;
+
+  if (!isAuthenticated && !isOnAuthPage) {
+    router.push("/sign-in");
+    return null; // Prevents rendering of children while redirecting
+  }
+
+  return (
+    <>
+      {user && <LogoutButton />}
+      {children}
+    </>
+  );
 }

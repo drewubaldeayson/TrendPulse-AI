@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import RedirectLayout from "@/firebase/redirectLayout";
-import LogoutButton from "@/components/LogoutButton";
 import { cn } from "@/lib/utils";
 
 const fontSans = FontSans({
@@ -25,14 +24,11 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased container",
           fontSans.variable
         )}
       >
-        <RedirectLayout>
-          <LogoutButton />
-          {children}
-        </RedirectLayout>
+        <RedirectLayout>{children}</RedirectLayout>
       </body>
     </html>
   );

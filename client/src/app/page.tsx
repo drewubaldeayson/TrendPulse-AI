@@ -45,6 +45,9 @@ export default function Home() {
 
   const getAllMessages = async () => {
     const token = sessionStorage.getItem("user");
+    if (!token) {
+      return;
+    }
     const response = await axios.get("http://localhost:5000/api/messages", {
       headers: {
         Authorization: token,
@@ -56,6 +59,13 @@ export default function Home() {
   useEffect(() => {
     getAllMessages();
   }, []);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages]);
 
   return (
     <main>
