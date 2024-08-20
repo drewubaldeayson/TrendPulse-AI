@@ -1,4 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
+import { Textarea } from "./ui/textarea";
+import { Button } from "./ui/button";
 
 interface MessageBoxProps {
   onSubmit: (e: React.FormEvent) => void;
@@ -12,14 +14,17 @@ export default function MessageBox({
   setMessage,
 }: MessageBoxProps) {
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        type="text"
+    <form className="flex gap-2" onSubmit={onSubmit}>
+      <Textarea
         placeholder="Type your message here..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />
-      <button type="submit">Send</button>
+      <div>
+        <Button className="h-full" type="submit">
+          Send Chat
+        </Button>
+      </div>
     </form>
   );
 }
