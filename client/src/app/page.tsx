@@ -15,7 +15,7 @@ export default function Home() {
         axios
           .post(
             "http://localhost:5000/chatgpt",
-            { message: "test" },
+            { message: "" },
             {
               headers: {
                 Authorization: token,

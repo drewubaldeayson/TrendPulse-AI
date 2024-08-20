@@ -72,9 +72,15 @@ app.post(
         .doc(userId)
         .collection("messages");
 
-      // Fetch existing messages
-      const snapshot = await messagesRef.orderBy("timestamp").get();
-      const messages = snapshot.docs.map((doc) => doc.data());
+      // Fetch existing messages, limiting to the last 10
+      const snapshot = await messagesRef.orderBy("timestamp").limit(10).get();
+      const messages = snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          role: data.role,
+          content: data.content,
+        };
+      });
 
       // Add user message to Firestore
       await messagesRef.add({
@@ -85,6 +91,7 @@ app.post(
 
       // Get response from ChatGPT
       const chatGPTResponse = await getChatGPTResponse([
+        ...messages,
         { role: "user", content: message },
       ]);
 

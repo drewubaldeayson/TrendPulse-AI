@@ -19,7 +19,6 @@ const getChatGPTResponse = async (
       model: "gpt-3.5-turbo",
       messages,
     });
-    console.log(messages, response.choices[0].message.content);
     return response.choices[0].message.content;
   } catch (error) {
     console.error("Error calling ChatGPT API:", error);
