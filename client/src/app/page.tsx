@@ -1,4 +1,6 @@
 "use client";
+import MessageBox from "@/components/MessageBox";
+import MessageList from "@/components/MessageList";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -8,7 +10,7 @@ export default function Home() {
   >([]);
   const [message, setMessage] = useState("");
 
-  const sendMessage = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Append your own message with role "user"
@@ -57,30 +59,12 @@ export default function Home() {
 
   return (
     <main>
-      <ul>
-        {messages.length === 0 ? (
-          <li>
-            <span className="capitalize">assistant: </span>
-            Hi! Ask me anything.
-          </li>
-        ) : (
-          messages.map((message, index) => (
-            <li key={index}>
-              <span className="capitalize">{message.role}: </span>
-              {message.content}
-            </li>
-          ))
-        )}
-      </ul>
-      <form onSubmit={sendMessage}>
-        <input
-          type="text"
-          placeholder="Type your message here..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button type="submit">Send</button>
-      </form>
+      <MessageList messages={messages} />
+      <MessageBox
+        onSubmit={handleSubmit}
+        message={message}
+        setMessage={setMessage}
+      />
     </main>
   );
 }
