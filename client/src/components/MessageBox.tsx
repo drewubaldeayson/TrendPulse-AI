@@ -14,10 +14,7 @@ export default function MessageBox({
   setMessage,
 }: MessageBoxProps) {
   return (
-    <form
-      className="flex gap-2 sticky bottom-0 bg-primary-foreground"
-      onSubmit={onSubmit}
-    >
+    <form className="p-8 flex gap-2 bg-white" onSubmit={onSubmit}>
       <Textarea
         placeholder="Type your message here..."
         value={message}

@@ -3,11 +3,13 @@ import ReactMarkdown from "react-markdown";
 
 interface MessageListProps {
   messages: Array<{ role: string; content: string }>;
+  title: string | undefined;
 }
 
-export default function MessageList({ messages }: MessageListProps) {
+export default function MessageList({ messages, title }: MessageListProps) {
   return (
-    <article className="prose p-8 flex flex-col">
+    <article className="h-full prose p-8 flex flex-col">
+      <h2 className="text-center">{title}</h2>
       {messages.length === 0 ? (
         <MessageSection role="assistant" content="Hi! Ask me anything." />
       ) : (
