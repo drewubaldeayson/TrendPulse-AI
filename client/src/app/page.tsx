@@ -1,21 +1,15 @@
 "use client";
-import LogoutButton from "@/components/LogoutButton";
+import ConversationList, { Conversation } from "@/components/ConversationList";
 import MessageBox from "@/components/MessageBox";
-import MessageList from "@/components/MessageList";
+import MessageList, { Message } from "@/components/MessageList";
+import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import WrapperChat from "@/components/WrapperChat";
+import WrapperSidebar from "@/components/WrapperSidebar";
+import { auth } from "@/firebase/config";
 import axios from "axios";
-import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
-
-interface Message {
-  role: string;
-  content: string;
-}
-
-interface Conversation {
-  id: string;
-  title: string;
-}
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export default function Home() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -24,8 +18,10 @@ export default function Home() {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [user] = useAuthState(auth);
+
   const handleNewConversation = async () => {
-    const token = sessionStorage.getItem("user");
+    const token = await user?.getIdToken(true);
     const response = await axios.post(
       "http://localhost:5000/api/conversations/",
       {},
@@ -36,8 +32,8 @@ export default function Home() {
       }
     );
     setConversations((prevConversations) => [
-      ...prevConversations,
       { id: response.data.id, title: response.data.title },
+      ...prevConversations,
     ]);
     setConversation({ id: response.data.id, title: response.data.title });
   };
@@ -56,7 +52,7 @@ export default function Home() {
     ]);
 
     // Send the message to the server
-    const token = sessionStorage.getItem("user");
+    const token = await user?.getIdToken(true);
     const response = await axios.post(
       `http://localhost:5000/api/conversations/${conversation?.id}`,
       {
@@ -95,7 +91,7 @@ export default function Home() {
   };
 
   const getAllConversations = async () => {
-    const token = sessionStorage.getItem("user");
+    const token = await user?.getIdToken();
     if (!token) {
       return;
     }
@@ -112,7 +108,7 @@ export default function Home() {
   };
 
   const getAllMessages = async () => {
-    const token = sessionStorage.getItem("user");
+    const token = await user?.getIdToken();
 
     if (!token) {
       return;
@@ -143,39 +139,30 @@ export default function Home() {
   }, [messages]);
 
   return (
-    <main className="flex">
-      <div className="w-64 p-4 bg-primary-foreground">
-        <div className="overflow-hidden">
-          <LogoutButton />
-          <Button variant="outline" onClick={handleNewConversation}>
-            + New Conversation
+    <main>
+      <Navbar />
+      <div className="flex">
+        <WrapperSidebar>
+          <Button variant="outline" size="sm" onClick={handleNewConversation}>
+            New
           </Button>
-          {conversations.map((convo) => (
-            <Button
-              variant="link"
-              key={convo.id}
-              onClick={() => setConversation(convo)}
-              className={clsx({
-                underline: convo.id === conversation?.id,
-              })}
-            >
-              {convo.title}
-            </Button>
-          ))}
-        </div>
-      </div>
-      <div className="flex flex-col flex-1 overflow-y-auto h-screen">
-        <div className="flex-1">
-          <MessageList messages={messages} title={conversation?.title} />
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="sticky bottom-0">
+          <ConversationList
+            conversations={conversations}
+            conversation={conversation}
+            setConversation={setConversation}
+          />
+        </WrapperSidebar>
+        <WrapperChat>
+          <div className="flex-1">
+            <MessageList messages={messages} title={conversation?.title} />
+            <div ref={messagesEndRef} />
+          </div>
           <MessageBox
             onSubmit={handleNewMessage}
             message={newMessage}
             setMessage={setNewMessage}
           />
-        </div>
+        </WrapperChat>
       </div>
     </main>
   );

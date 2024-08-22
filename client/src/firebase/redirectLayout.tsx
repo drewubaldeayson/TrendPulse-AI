@@ -2,7 +2,7 @@
 import { useAuthState } from "react-firebase-hooks/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { auth } from "@/firebase/config";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function RedirectLayout({
   children,
@@ -12,39 +12,26 @@ export default function RedirectLayout({
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
   const pathname = usePathname();
-
-  // Retrieve the session token from sessionStorage
-  const userSession =
-    typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
-
-  // Define whether the user is authenticated or not
-  const isAuthenticated = !!user || !!userSession;
-
-  // Define whether the current page is an authentication page (sign-in or sign-up)
-  const isOnAuthPage = pathname === "/sign-in" || pathname === "/sign-up";
+  const [redirecting, setRedirecting] = useState(true);
 
   useEffect(() => {
-    // Store the user token in sessionStorage if logged in and session not yet stored
-    if (user && !userSession) {
-      user.getIdToken().then((token) => sessionStorage.setItem("user", token));
-    }
-  }, [user, userSession]);
+    const handleRedirect = async () => {
+      if (loading) return;
 
-  // Prevent rendering when loading
-  if (loading) {
-    return null;
-  }
+      if (user && (pathname === "/sign-in" || pathname === "/sign-up")) {
+        router.push("/");
+      } else if (!user && pathname !== "/sign-in" && pathname !== "/sign-up") {
+        router.push("/sign-in");
+      } else {
+        setRedirecting(false); // Stop redirecting if no action is taken
+      }
+    };
 
-  // Redirect authenticated users away from the auth pages
-  if (isAuthenticated && isOnAuthPage) {
-    router.push("/");
-    return null; // Prevent rendering children during redirect
-  }
+    handleRedirect();
+  }, [loading, user, pathname, router]);
 
-  // Redirect unauthenticated users trying to access non-auth pages
-  if (!isAuthenticated && !isOnAuthPage) {
-    router.push("/sign-in");
-    // Prevent rendering children during redirect
+  // Prevent rendering while redirecting or loading
+  if (loading || redirecting) {
     return null;
   }
 

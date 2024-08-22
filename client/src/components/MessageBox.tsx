@@ -14,17 +14,19 @@ export default function MessageBox({
   setMessage,
 }: MessageBoxProps) {
   return (
-    <form className="p-8 flex gap-2 bg-white" onSubmit={onSubmit}>
-      <Textarea
-        placeholder="Type your message here..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <div>
-        <Button className="h-full" type="submit">
-          Send Chat
-        </Button>
-      </div>
-    </form>
+    <div className="sticky bottom-0">
+      <form className="p-8 flex gap-2 bg-white" onSubmit={onSubmit}>
+        <Textarea
+          placeholder="Type your message here..."
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
+        <div>
+          <Button className="h-full" type="submit">
+            Send Chat
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }

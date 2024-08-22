@@ -1,14 +1,19 @@
 import clsx from "clsx";
 import ReactMarkdown from "react-markdown";
 
+export interface Message {
+  role: string;
+  content: string;
+}
+
 interface MessageListProps {
-  messages: Array<{ role: string; content: string }>;
+  messages: Message[];
   title: string | undefined;
 }
 
 export default function MessageList({ messages, title }: MessageListProps) {
   return (
-    <article className="h-full prose p-8 flex flex-col">
+    <article className="prose p-8 flex flex-col">
       <h2 className="text-center">{title}</h2>
       {messages.length === 0 ? (
         <MessageSection role="assistant" content="Hi! Ask me anything." />
@@ -41,7 +46,7 @@ const MessageSection: React.FC<MessageSectionProps> = ({ role, content }) => (
         hidden: role === "user",
       })}
     >
-      {role}
+      {role === "assistant" ? "Trendpulse AI" : role}
     </h4>
 
     <ReactMarkdown

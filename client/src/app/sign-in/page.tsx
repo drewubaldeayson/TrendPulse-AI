@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { auth } from "@/firebase/config";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import Link from "next/link";
@@ -7,20 +7,8 @@ import Link from "next/link";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signInWithEmailAndPassword, user, _loading, error] =
+  const [signInWithEmailAndPassword, _user, _loading, error] =
     useSignInWithEmailAndPassword(auth);
-
-  useEffect(() => {
-    const signIn = async () => {
-      if (user) {
-        const token = await user.user.getIdToken();
-        setEmail("");
-        setPassword("");
-        sessionStorage.setItem("user", token);
-      }
-    };
-    signIn();
-  }, [user]);
 
   return (
     <div>
