@@ -42,8 +42,13 @@ export default function Home() {
     e.preventDefault();
 
     // Clear the message input
+    const submitMessage = newMessage.trim();
     setNewMessage("");
-    const submitMessage = newMessage;
+
+    // If there's no message, do nothing
+    if (!submitMessage) {
+      return;
+    }
 
     // Append your own message with role "user"
     setMessages((prevMessages) => [

@@ -24,7 +24,10 @@ export default function MessageBox({
 
   return (
     <div className="sticky bottom-0">
-      <form className="p-8 flex gap-2 bg-white" onSubmit={onSubmit}>
+      <form
+        className="px-4 md:px-16 pb-8 flex gap-2 bg-white"
+        onSubmit={onSubmit}
+      >
         <Textarea
           placeholder="Type your message here..."
           value={message}
@@ -32,7 +35,7 @@ export default function MessageBox({
           onKeyDown={handleKeyDown}
         />
         <div>
-          <Button className="h-full" type="submit">
+          <Button className="h-full p-2 md:p-4" type="submit">
             Send Chat
           </Button>
         </div>

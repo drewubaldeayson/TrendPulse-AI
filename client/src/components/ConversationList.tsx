@@ -22,12 +22,15 @@ export default function ConversationList({
     <>
       {conversations.map((convo) => (
         <Button
-          variant="link"
+          variant="ghost"
           key={convo.id}
           onClick={() => setConversation(convo)}
-          className={clsx("w-full truncate text-start block", {
-            underline: convo.id === conversation?.id,
-          })}
+          className={clsx(
+            "text-xs md:text-sm px-0 w-full truncate text-start block",
+            {
+              underline: convo.id === conversation?.id,
+            }
+          )}
         >
           {convo.title}
         </Button>

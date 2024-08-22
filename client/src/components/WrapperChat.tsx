@@ -1,4 +1,4 @@
-export default function WrapperSidebar({
+export default function WrapperChat({
   children,
 }: {
   children: React.ReactNode;
