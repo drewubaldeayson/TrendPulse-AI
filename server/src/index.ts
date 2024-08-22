@@ -4,7 +4,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 import { getChatGPTResponse } from "./chatgpt";
-import axios from "axios";
 dotenv.config();
 
 const app = express();
@@ -65,7 +64,9 @@ app.get(
         .collection("conversations");
 
       // Fetch all conversations
-      let conversationsDoc = await conversationsRef.get();
+      let conversationsDoc = await conversationsRef
+        .orderBy("timestamp", "desc")
+        .get();
 
       // If there are no conversations, create a new one
       if (conversationsDoc.empty) {
@@ -74,9 +75,11 @@ app.get(
 
         await conversationsRef
           .doc(conversationId)
-          .set({ title: "New Chat" }, { merge: true });
+          .set({ title: "New Chat", timestamp: Date.now() }, { merge: true });
 
-        conversationsDoc = await conversationsRef.get();
+        conversationsDoc = await conversationsRef
+          .orderBy("timestamp", "desc")
+          .get();
       }
 
       const conversations = conversationsDoc.docs.map((doc) => {
@@ -116,7 +119,7 @@ app.post(
         .doc(userId)
         .collection("conversations")
         .doc(conversationId)
-        .set({ title: "New Chat" }, { merge: true });
+        .set({ title: "New Chat", timestamp: Date.now() }, { merge: true });
 
       // Send conversation ID back to the user
       res.json({ id: conversationId, title: "New Chat" });
