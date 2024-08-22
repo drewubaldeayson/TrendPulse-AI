@@ -14,7 +14,7 @@ interface MessageListProps {
 export default function MessageList({ messages, title }: MessageListProps) {
   return (
     <article className="prose p-8 flex flex-col">
-      <h2 className="text-center font-bold">{title}</h2>
+      <h3 className="text-center">{title}</h3>
       {messages.length === 0 ? (
         <MessageSection role="assistant" content="Hi! Ask me anything." />
       ) : (
