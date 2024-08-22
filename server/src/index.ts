@@ -216,7 +216,8 @@ app.post(
             role: "user",
             content:
               "Based on the following conversation, generate a concise and descriptive title " +
-              "that captures the main topics and themes discussed. Don't add any additional text. \n\n" +
+              "that accurately captures the main topics discussed, using no more than 4 words. " +
+              "The title should only contain alphanumeric characters and spaces.\n\n" +
               message,
           },
         ]);

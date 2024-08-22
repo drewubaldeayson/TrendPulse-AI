@@ -14,7 +14,7 @@ interface MessageListProps {
 export default function MessageList({ messages, title }: MessageListProps) {
   return (
     <article className="prose p-8 flex flex-col">
-      <h2 className="text-center">{title}</h2>
+      <h2 className="text-center font-bold">{title}</h2>
       {messages.length === 0 ? (
         <MessageSection role="assistant" content="Hi! Ask me anything." />
       ) : (
@@ -42,7 +42,7 @@ const MessageSection: React.FC<MessageSectionProps> = ({ role, content }) => (
     })}
   >
     <h4
-      className={clsx("capitalize", {
+      className={clsx({
         hidden: role === "user",
       })}
     >
@@ -51,7 +51,8 @@ const MessageSection: React.FC<MessageSectionProps> = ({ role, content }) => (
 
     <ReactMarkdown
       className={clsx({
-        "w-fit bg-secondary py-1 px-8 rounded border": role === "user",
+        "w-fit bg-secondary py-2 px-4 rounded-full border text-base prose-sm":
+          role === "user",
       })}
     >
       {content}
