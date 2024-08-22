@@ -46,7 +46,7 @@ const MessageSection: React.FC<MessageSectionProps> = ({ role, content }) => (
         hidden: role === "user",
       })}
     >
-      {role === "assistant" ? "Trendpulse AI" : role}
+      {role === "assistant" ? "Trendpulse-AI" : role}
     </h4>
 
     <ReactMarkdown
