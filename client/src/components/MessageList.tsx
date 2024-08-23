@@ -1,5 +1,4 @@
-import clsx from "clsx";
-import ReactMarkdown from "react-markdown";
+import MessageSection from "./MessageSection";
 
 export interface Message {
   role: string;
@@ -29,33 +28,3 @@ export default function MessageList({ messages, title }: MessageListProps) {
     </article>
   );
 }
-
-interface MessageSectionProps {
-  role: string;
-  content: string;
-}
-
-const MessageSection: React.FC<MessageSectionProps> = ({ role, content }) => (
-  <section
-    className={clsx({
-      "self-end": role === "user",
-    })}
-  >
-    <h4
-      className={clsx({
-        hidden: role === "user",
-      })}
-    >
-      {role === "assistant" ? "Trendpulse-AI" : role}
-    </h4>
-
-    <ReactMarkdown
-      className={clsx("text-sm md:text-base", {
-        "w-fit bg-secondary py-2 px-4 rounded-xl border prose-sm":
-          role === "user",
-      })}
-    >
-      {content}
-    </ReactMarkdown>
-  </section>
-);

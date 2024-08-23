@@ -30,7 +30,7 @@ export default function ConversationList({
             key={currentConversation.id}
             onClick={() => setConversation(currentConversation)}
             className={clsx(
-              "px-2 md:px-4 text-xs md:text-sm w-full truncate text-start block",
+              "px-2 md:px-4 text-sm w-full truncate text-start block",
               {
                 underline: currentConversation.id === conversation?.id,
               }

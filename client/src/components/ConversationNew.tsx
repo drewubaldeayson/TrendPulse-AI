@@ -11,7 +11,12 @@ export default function ConversationNew({
   return (
     <div className="flex px-2 md:px-4 prose justify-between">
       <h4 className="m-0">Chats</h4>
-      <Button variant="outline" size="sm" onClick={handleNewConversation}>
+      <Button
+        variant="outline"
+        className="px-2"
+        size="sm"
+        onClick={handleNewConversation}
+      >
         <FaPlus className="mr-1" /> New
       </Button>
     </div>
