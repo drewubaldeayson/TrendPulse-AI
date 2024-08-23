@@ -130,6 +130,39 @@ app.post(
   }
 );
 
+// Delete a conversation
+app.delete(
+  "/api/conversations/:conversationId",
+  isAuthenticated,
+  async (req: AuthenticatedRequest, res: Response) => {
+    const userId = req.user?.uid;
+    const { conversationId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ error: "Missing user ID" });
+    }
+
+    if (!conversationId) {
+      return res.status(400).json({ error: "Missing conversation ID" });
+    }
+
+    try {
+      // Reference to the Firestore collection for this user's conversation
+      const conversationsRef = firestore
+        .collection("users")
+        .doc(userId)
+        .collection("conversations");
+
+      // Delete the conversation
+      await conversationsRef.doc(conversationId).delete();
+      res.status(204).end();
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+      res.status(500).json({ error: "Failed to delete conversation" });
+    }
+  }
+);
+
 // Get all messages in a specific conversation
 app.get(
   "/api/conversations/:conversationId",

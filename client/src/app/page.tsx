@@ -1,9 +1,9 @@
 "use client";
 import ConversationList, { Conversation } from "@/components/ConversationList";
+import ConversationNew from "@/components/ConversationNew";
 import MessageBox from "@/components/MessageBox";
 import MessageList, { Message } from "@/components/MessageList";
 import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
 import WrapperChat from "@/components/WrapperChat";
 import WrapperSidebar from "@/components/WrapperSidebar";
 import { auth } from "@/firebase/config";
@@ -36,6 +36,25 @@ export default function Home() {
       ...prevConversations,
     ]);
     setConversation({ id: response.data.id, title: response.data.title });
+  };
+
+  const handleDeleteConversation = async (id: string) => {
+    const token = await user?.getIdToken(true);
+    await axios
+      .delete(`http://localhost:5000/api/conversations/${id}`, {
+        headers: {
+          Authorization: token,
+        },
+      })
+      .then(() => {
+        setConversations((prevConversations) =>
+          prevConversations.filter((conversation) => conversation.id !== id)
+        );
+        setConversation(conversations[0]);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleNewMessage = async (e: React.FormEvent) => {
@@ -148,10 +167,9 @@ export default function Home() {
       <Navbar />
       <div className="flex">
         <WrapperSidebar>
-          <Button variant="outline" size="sm" onClick={handleNewConversation}>
-            New
-          </Button>
+          <ConversationNew handleNewConversation={handleNewConversation} />
           <ConversationList
+            handleDeleteConversation={handleDeleteConversation}
             conversations={conversations}
             conversation={conversation}
             setConversation={setConversation}
@@ -163,7 +181,7 @@ export default function Home() {
             <div ref={messagesEndRef} />
           </div>
           <MessageBox
-            onSubmit={handleNewMessage}
+            handleNewMessage={handleNewMessage}
             message={newMessage}
             setMessage={setNewMessage}
           />

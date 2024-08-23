@@ -3,13 +3,13 @@ import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 
 interface MessageBoxProps {
-  onSubmit: (e: React.FormEvent) => void;
+  handleNewMessage: (e: React.FormEvent) => void;
   message: string;
   setMessage: Dispatch<SetStateAction<string>>;
 }
 
 export default function MessageBox({
-  onSubmit,
+  handleNewMessage: onSubmit,
   message,
   setMessage,
 }: MessageBoxProps) {

@@ -9,38 +9,40 @@ export interface Conversation {
 }
 
 type ConversationListProps = {
+  handleDeleteConversation: (id: string) => void;
   conversations: Conversation[];
   conversation: Conversation | null;
   setConversation: Dispatch<SetStateAction<Conversation | null>>;
 };
 
 export default function ConversationList({
+  handleDeleteConversation,
   conversations,
   conversation,
   setConversation,
 }: ConversationListProps) {
   return (
     <>
-      {conversations.map((convo) => (
+      {conversations.map((currentConversation) => (
         <div className="relative group">
           <Button
             variant="ghost"
-            key={convo.id}
-            onClick={() => setConversation(convo)}
+            key={currentConversation.id}
+            onClick={() => setConversation(currentConversation)}
             className={clsx(
               "px-2 md:px-4 text-xs md:text-sm w-full truncate text-start block",
               {
-                underline: convo.id === conversation?.id,
+                underline: currentConversation.id === conversation?.id,
               }
             )}
           >
-            {convo.title}
+            {currentConversation.title}
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="absolute right-0 -translate-y-1/2 opacity-0 top-1/2 group-hover:opacity-100 bg-primary-foreground"
-            onClick={() => console.log(convo.id)}
+            onClick={() => handleDeleteConversation(currentConversation.id)}
           >
             <FaRegTrashCan />
           </Button>
