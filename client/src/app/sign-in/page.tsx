@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import clsx from "clsx";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address").min(1, "Email is required"),
@@ -23,8 +24,6 @@ const formSchema = z.object({
 });
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [signInWithEmailAndPassword, _user, _loading, error] =
     useSignInWithEmailAndPassword(auth);
 
@@ -41,7 +40,7 @@ export default function SignIn() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(signInHandler)}
-          className="border p-8 rounded bg-white prose min-w-[32rem] space-y-8"
+          className="border p-8 rounded bg-white prose min-w-[32rem] space-y-6"
         >
           <h1 className="text-center">TrendPulse-AI</h1>
           <h2 className="m-0">Sign In</h2>
@@ -59,7 +58,6 @@ export default function SignIn() {
               </FormItem>
             )}
           />
-
           {/* Password Field */}
           <FormField
             control={form.control}
@@ -74,12 +72,17 @@ export default function SignIn() {
               </FormItem>
             )}
           />
-
           {/* Submit Button */}
           <Button type="submit">Sign In</Button>
-          {error && <p className="text-destructive">{error.message}</p>}
+          <p
+            className={clsx("text-destructive", {
+              hidden: !error,
+            })}
+          >
+            Invalid email or password. Please try again.
+          </p>
           <Link href="/sign-up" className="underline">
-            <p>Don't have an account? Sign up here.</p>
+            <p>Don't have an account?</p>
           </Link>
         </form>
       </Form>

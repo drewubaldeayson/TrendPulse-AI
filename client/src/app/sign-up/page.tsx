@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import clsx from "clsx";
 
 const formSchema = z
   .object({
@@ -48,7 +49,7 @@ export default function SignUp() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(signUpHandler)}
-          className="border p-8 rounded bg-white prose min-w-[32rem] space-y-8"
+          className="border p-8 rounded bg-white prose min-w-[32rem] space-y-6"
         >
           <h1 className="text-center">TrendPulse-AI</h1>
           <h2 className="m-0">Sign Up</h2>
@@ -103,7 +104,13 @@ export default function SignUp() {
 
           {/* Submit Button */}
           <Button type="submit">Sign Up</Button>
-          {error && <p className="text-destructive">{error.message}</p>}
+          <p
+            className={clsx("text-destructive", {
+              hidden: !error,
+            })}
+          >
+            An account with this email already exists.
+          </p>
           <Link href="/sign-in" className="underline">
             <p>Already have an account?</p>
           </Link>
