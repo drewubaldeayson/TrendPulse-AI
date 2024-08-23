@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -23,18 +22,16 @@ const formSchema = z
     email: z
       .string()
       .email("Invalid email address")
-      .nonempty("Email is required"),
+      .min(1, "Email is required"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
-    path: ["confirmPassword"], // Path to indicate the error location
+    path: ["confirmPassword"],
   });
 
 export default function SignUp() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [createUserWithEmailAndPassword, _user, _loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
