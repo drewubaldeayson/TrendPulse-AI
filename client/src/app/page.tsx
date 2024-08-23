@@ -17,7 +17,6 @@ export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
   const [user] = useAuthState(auth);
 
   const handleNewConversation = async () => {
@@ -50,6 +49,10 @@ export default function Home() {
         setConversations((prevConversations) =>
           prevConversations.filter((conversation) => conversation.id !== id)
         );
+        if (conversations.length === 1) {
+          getAllConversations();
+          return;
+        }
         setConversation(conversations[0]);
       })
       .catch((error) => {
