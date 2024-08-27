@@ -1,7 +1,9 @@
 "use client";
-import { useState } from "react";
 import { auth } from "@/firebase/config";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,6 +26,7 @@ const formSchema = z
       .string()
       .email("Invalid email address")
       .min(1, "Email is required"),
+    name: z.string().min(1, "Name is required"),
     password: z.string().min(8, "Password must be at least 8 characters long"),
     confirmPassword: z.string(),
   })
@@ -36,12 +39,15 @@ export default function SignUp() {
   const [createUserWithEmailAndPassword, _user, _loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
+  const [updateProfile, _updating, _error] = useUpdateProfile(auth);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
 
-  const signUpHandler = (data: z.infer<typeof formSchema>) => {
-    createUserWithEmailAndPassword(data.email, data.password);
+  const signUpHandler = async (data: z.infer<typeof formSchema>) => {
+    await createUserWithEmailAndPassword(data.email, data.password);
+    await updateProfile({ displayName: data.name });
   };
 
   return (
@@ -61,7 +67,22 @@ export default function SignUp() {
               <FormItem className="relative">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email" {...field} />
+                  <Input placeholder="john.doe@example.com" {...field} />
+                </FormControl>
+                <FormMessage className="absolute right-0 top-0" />
+              </FormItem>
+            )}
+          />
+
+          {/* Name Field */}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem className="relative">
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="John Doe" {...field} />
                 </FormControl>
                 <FormMessage className="absolute right-0 top-0" />
               </FormItem>
@@ -76,7 +97,7 @@ export default function SignUp() {
               <FormItem className="relative">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="Password" {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage className="absolute right-0 top-0" />
               </FormItem>
@@ -91,11 +112,7 @@ export default function SignUp() {
               <FormItem className="relative">
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Confirm Password"
-                    {...field}
-                  />
+                  <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage className="absolute right-0 top-0" />
               </FormItem>
