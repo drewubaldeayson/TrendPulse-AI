@@ -3,7 +3,6 @@ import ConversationList, { Conversation } from "@/components/ConversationList";
 import ConversationNew from "@/components/ConversationNew";
 import MessageBox from "@/components/MessageBox";
 import MessageList, { Message } from "@/components/MessageList";
-import Navbar from "@/components/Navbar";
 import WrapperChat from "@/components/WrapperChat";
 import WrapperSidebar from "@/components/WrapperSidebar";
 import { auth } from "@/firebase/config";
@@ -167,7 +166,6 @@ export default function Home() {
 
   return (
     <main>
-      <Navbar />
       <div className="flex">
         <WrapperSidebar>
           <ConversationNew handleNewConversation={handleNewConversation} />

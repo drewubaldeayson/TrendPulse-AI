@@ -3,6 +3,7 @@ import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
 import RedirectLayout from "@/firebase/RedirectLayout";
 import { cn } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
 
 const fontSans = FontSans({
   weight: "400",
@@ -28,6 +29,7 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
+        <Navbar />
         <RedirectLayout>{children}</RedirectLayout>
       </body>
     </html>
