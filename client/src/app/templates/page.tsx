@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useState } from "react";
 import clsx from "clsx";
-import templates from "@/app/templates/templates.json";
+import templates from "@/lib/templates.json";
 
 export interface Template {
   title: string;

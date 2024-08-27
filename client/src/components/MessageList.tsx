@@ -1,3 +1,4 @@
+import MessageHeader from "./MessageHeader";
 import MessageSection from "./MessageSection";
 
 export interface Message {
@@ -15,7 +16,7 @@ export default function MessageList({ messages, title }: MessageListProps) {
     <article className="prose p-4 md:p-8 flex flex-col">
       <h3 className="text-center">{title}</h3>
       {messages.length === 0 ? (
-        <MessageSection role="assistant" content="Hi! Ask me anything." />
+        <MessageHeader />
       ) : (
         messages.map((message, index) => (
           <MessageSection
