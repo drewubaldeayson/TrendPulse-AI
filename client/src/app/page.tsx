@@ -9,14 +9,15 @@ import { auth } from "@/firebase/config";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FieldValues, SubmitHandler, useFormContext } from "react-hook-form";
 
 export default function Home() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [user] = useAuthState(auth);
+  const { setValue, setFocus } = useFormContext();
 
   const handleNewConversation = async () => {
     const token = await user?.getIdToken(true);
@@ -59,12 +60,10 @@ export default function Home() {
       });
   };
 
-  const handleNewMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-
+  const handleNewMessage: SubmitHandler<FieldValues> = async (data) => {
     // Clear the message input
-    const submitMessage = newMessage.trim();
-    setNewMessage("");
+    const submitMessage = data.message.trim();
+    setValue("message", "");
 
     // If there's no message, do nothing
     if (!submitMessage) {
@@ -164,6 +163,10 @@ export default function Home() {
     }
   }, [messages]);
 
+  useEffect(() => {
+    setFocus("message");
+  }, [setFocus]);
+
   return (
     <main>
       <div className="flex">
@@ -181,11 +184,7 @@ export default function Home() {
             <MessageList messages={messages} title={conversation?.title} />
             <div ref={messagesEndRef} />
           </div>
-          <MessageBox
-            handleNewMessage={handleNewMessage}
-            message={newMessage}
-            setMessage={setNewMessage}
-          />
+          <MessageBox onSubmit={handleNewMessage} />
         </WrapperChat>
       </div>
     </main>

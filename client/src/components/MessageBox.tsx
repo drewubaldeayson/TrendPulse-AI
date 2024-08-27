@@ -1,18 +1,15 @@
-import { Dispatch, SetStateAction, KeyboardEvent } from "react";
+import { FieldValues, SubmitHandler, useFormContext } from "react-hook-form";
+import { KeyboardEvent } from "react";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 
 interface MessageBoxProps {
-  handleNewMessage: (e: React.FormEvent) => void;
-  message: string;
-  setMessage: Dispatch<SetStateAction<string>>;
+  onSubmit: SubmitHandler<FieldValues>;
 }
 
-export default function MessageBox({
-  handleNewMessage: onSubmit,
-  message,
-  setMessage,
-}: MessageBoxProps) {
+export default function MessageBox({ onSubmit }: MessageBoxProps) {
+  const { register, handleSubmit } = useFormContext(); // Access form context
+
   // Handle keydown for submit on Enter, but not Shift + Enter
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -26,12 +23,11 @@ export default function MessageBox({
     <div className="sticky bottom-0">
       <form
         className="px-4 md:px-16 pb-8 flex gap-2 bg-white"
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Textarea
           placeholder="Type your message here..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          {...register("message")} // Register message with React Hook Form
           onKeyDown={handleKeyDown}
         />
         <div>
