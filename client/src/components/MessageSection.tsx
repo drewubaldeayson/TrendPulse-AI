@@ -41,6 +41,7 @@ export default function MessageSection({ role, content }: MessageSectionProps) {
         className={clsx("text-sm md:text-base", {
           "w-fit bg-secondary py-2 px-4 rounded-xl border prose-sm":
             role === "user",
+          "animate-pulse": role === "assistant" && content === "...",
         })}
       >
         {content}

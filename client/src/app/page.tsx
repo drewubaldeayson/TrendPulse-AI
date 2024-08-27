@@ -78,6 +78,13 @@ export default function Home() {
 
     // Send the message to the server
     const token = await user?.getIdToken(true);
+
+    // Add a placeholder message with role "assistant"
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { role: "assistant", content: "..." }, // Placeholder content
+    ]);
+
     const response = await axios.post(
       `http://localhost:5000/api/conversations/${conversation?.id}`,
       {
@@ -90,11 +97,14 @@ export default function Home() {
       }
     );
 
-    // Append the response from the server with role "assistant"
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { role: "assistant", content: response.data.message },
-    ]);
+    // Update the placeholder message with the actual response
+    setMessages((prevMessages) =>
+      prevMessages.map((msg) =>
+        msg.role === "assistant" && msg.content === "..."
+          ? { ...msg, content: response.data.message }
+          : msg
+      )
+    );
 
     // If there's a new title, update the conversation title
     if (response.data.title) {
