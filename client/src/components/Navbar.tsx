@@ -13,6 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FaCaretDown } from "react-icons/fa6";
 import { User } from "firebase/auth";
+import Link from "next/link";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "./ui/navigation-menu";
 
 export default function Navbar() {
   const [user] = useAuthState(auth);
@@ -22,7 +32,10 @@ export default function Navbar() {
   return (
     <div className="px-2 sticky top-0 h-16 border bg-primary-foreground flex items-center justify-between">
       <Logo />
-      <Dropdown user={user} />
+      <div className="flex gap-4">
+        <NavMenu />
+        <Dropdown user={user} />
+      </div>
     </div>
   );
 }
@@ -34,6 +47,27 @@ function Logo() {
         <span className="font-bold">TrendPulse-AI</span>
       </a>
     </Button>
+  );
+}
+
+function NavMenu() {
+  return (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+          <Link href="/" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Chat
+            </NavigationMenuLink>
+          </Link>
+          <Link href="/templates" legacyBehavior passHref>
+            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+              Templates
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
   );
 }
 
