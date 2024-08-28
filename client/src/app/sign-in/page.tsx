@@ -52,7 +52,7 @@ export default function SignIn() {
               <FormItem className="relative">
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="Email" {...field} />
+                  <Input placeholder="johndoe@example.com" {...field} />
                 </FormControl>
                 <FormMessage className="absolute right-0 top-0" />
               </FormItem>
@@ -66,7 +66,7 @@ export default function SignIn() {
               <FormItem className="relative">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input type="password" placeholder="Password" {...field} />
+                  <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
                 <FormMessage className="absolute right-0 top-0" />
               </FormItem>
