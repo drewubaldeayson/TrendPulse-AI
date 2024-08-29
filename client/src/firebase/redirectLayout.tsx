@@ -15,26 +15,29 @@ export default function RedirectLayout({
   const [redirecting, setRedirecting] = useState(true);
 
   useEffect(() => {
-    const handleRedirect = async () => {
-      if (loading) return;
+    const handleRedirect = () => {
+      const isAuthPath = pathname === "/sign-in" || pathname === "/sign-up";
+      const isProtectedPath = !isAuthPath && pathname !== "/";
 
-      if (user && (pathname === "/sign-in" || pathname === "/sign-up")) {
-        router.push("/");
-      } else if (!user && pathname !== "/sign-in" && pathname !== "/sign-up") {
-        router.push("/sign-in");
-      } else {
-        setRedirecting(false); // Stop redirecting if no action is taken
+      if (user && isAuthPath) {
+        setRedirecting(true);
+        router.push("/chat");
+        return;
       }
+      if (!user && isProtectedPath) {
+        setRedirecting(true);
+        router.push("/sign-in");
+        return;
+      }
+      setRedirecting(false);
     };
-
     handleRedirect();
-  }, [loading, user, pathname, router]);
+  }, [loading, user, pathname]);
 
-  // Prevent rendering while redirecting or loading
-  if (loading || redirecting) {
+  // Prevent rendering children while redirecting or loading
+  if (redirecting || loading) {
     return null;
   }
 
-  // Render the children when everything is fine
   return <>{children}</>;
 }

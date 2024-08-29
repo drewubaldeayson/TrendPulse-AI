@@ -42,7 +42,7 @@ export default function SignIn() {
           onSubmit={form.handleSubmit(signInHandler)}
           className="border p-8 rounded bg-white prose min-w-[32rem] space-y-6"
         >
-          <h1 className="text-center">TrendPulse-AI</h1>
+          <h1 className="text-center">TrendPulse AI</h1>
           <h2 className="m-0">Sign In</h2>
           {/* Email Field */}
           <FormField

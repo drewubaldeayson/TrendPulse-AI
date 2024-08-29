@@ -7,14 +7,13 @@ import Navbar from "@/components/Navbar";
 import FormProvider from "@/components/FormProvider";
 
 const fontSans = FontSans({
-  weight: "400",
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "TrendPulse-AI",
-  description: "TrendPulse-AI",
+  title: "TrendPulse AI",
+  description: "TrendPulse AI",
 };
 
 export default function RootLayout({

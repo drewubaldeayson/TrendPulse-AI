@@ -80,10 +80,10 @@ function CategoryButton({
 }: CategoryButtonProps) {
   return (
     <Button
-      variant="link"
+      variant="ghost"
       onClick={handleClick}
-      className={clsx("cursor-pointer", {
-        "font-bold": category.title === selectedCategory.title,
+      className={clsx("w-full justify-start", {
+        underline: category.title === selectedCategory.title,
       })}
     >
       {category.title}

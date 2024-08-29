@@ -24,55 +24,58 @@ import {
 export default function Navbar() {
   const [user] = useAuthState(auth);
 
-  if (!user) return null;
-
   return (
-    <div className="px-2 sticky top-0 h-16 border bg-primary-foreground flex items-center justify-between">
+    <nav className="sticky top-0 z-50 flex items-center justify-between h-16 px-2 border bg-primary-foreground">
       <Logo />
-      <div className="flex gap-4">
-        <NavMenu />
-        <Dropdown user={user} />
-      </div>
-    </div>
+      {user ? <AuthorizedMenu user={user} /> : <UnauthorizedMenu />}
+    </nav>
   );
 }
 
 function Logo() {
   return (
-    <Button variant="ghost">
-      <Link href="/">
-        <span className="font-bold">TrendPulse-AI</span>
-      </Link>
-    </Button>
+    <Link href="/">
+      <Button variant="ghost">
+        <span className="text-xl font-black">TrendPulse AI</span>
+      </Button>
+    </Link>
   );
 }
 
-function NavMenu() {
+function UnauthorizedMenu() {
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link href="/chat" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Chat
-            </NavigationMenuLink>
-          </Link>
-          <Link href="/templates" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Templates
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <div className="flex gap-4 pr-2">
+      <Link href="/sign-in">
+        <Button variant="outline">Login</Button>
+      </Link>
+    </div>
   );
 }
 
-interface DropdownProps {
-  user: User;
+function AuthorizedMenu({ user }: { user: User }) {
+  return (
+    <div className="flex gap-4">
+      <NavigationMenu>
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <Link href="/chat" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Chat
+              </NavigationMenuLink>
+            </Link>
+            <Link href="/templates" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Templates
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+      <Dropdown user={user} />
+    </div>
+  );
 }
-
-function Dropdown({ user }: DropdownProps) {
+function Dropdown({ user }: { user: User }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>

@@ -35,7 +35,7 @@ export default function MessageSection({ role, content }: MessageSectionProps) {
           hidden: role === "user",
         })}
       >
-        {role === "assistant" ? "Trendpulse-AI" : role}
+        {role === "assistant" ? "Trendpulse AI" : role}
       </h4>
       <ReactMarkdown
         className={clsx("text-sm md:text-base", {
