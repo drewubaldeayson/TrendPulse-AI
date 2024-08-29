@@ -178,7 +178,7 @@ function CapabilitiesSection() {
 
 function FooterSection() {
   return (
-    <footer className="flex items-center justify-between h-24 px-4 border-t bg-primary-foreground">
+    <footer className="flex items-center justify-between h-16 px-4 border-t bg-primary-foreground">
       <p className="w-full text-center opacity-50">
         &copy; {new Date().getFullYear()} TrendPulse AI. All rights reserved.
       </p>
@@ -206,7 +206,7 @@ function ApplicationItem({
   return (
     <div
       className={clsx(
-        "flex flex-col gap-8",
+        "flex flex-col-reverse gap-8",
         reverse ? "md:flex-row-reverse" : "md:flex-row"
       )}
     >
@@ -234,7 +234,7 @@ interface CapabilityItemProps {
 
 function CapabilityItem({ title, description, imageSrc }: CapabilityItemProps) {
   return (
-    <CarouselItem className="flex flex-col-reverse justify-center gap-8 px-24 md:flex-row">
+    <CarouselItem className="flex flex-col-reverse justify-center gap-8 md:px-24 md:flex-row">
       <div className="w-full md:w-1/2">
         <h2>{title}</h2>
         <p>{description}</p>

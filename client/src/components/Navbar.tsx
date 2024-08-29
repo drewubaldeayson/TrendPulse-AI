@@ -36,7 +36,7 @@ function Logo() {
   return (
     <Link href="/">
       <Button variant="ghost">
-        <span className="text-xl font-black">TrendPulse AI</span>
+        <span className="md:text-xl font-black">TrendPulse AI</span>
       </Button>
     </Link>
   );
@@ -54,7 +54,7 @@ function UnauthorizedMenu() {
 
 function AuthorizedMenu({ user }: { user: User }) {
   return (
-    <div className="flex gap-4">
+    <div className="flex pr-2 md:gap-4">
       <NavigationMenu>
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -63,6 +63,8 @@ function AuthorizedMenu({ user }: { user: User }) {
                 Chat
               </NavigationMenuLink>
             </Link>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
             <Link href="/templates" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Templates

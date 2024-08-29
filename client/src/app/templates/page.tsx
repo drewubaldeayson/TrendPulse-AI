@@ -38,11 +38,11 @@ export default function Templates() {
 
   return (
     <main className="container py-8">
-      <div className="prose mb-4">
-        <h2>Templates Library</h2>
+      <div className="mb-4 prose">
+        <h2 className="text-base md:text-lg">Templates Library</h2>
       </div>
       <div className="flex gap-4">
-        <div className="w-32 md:w-72 flex flex-col items-start">
+        <div className="flex flex-col items-start w-48 md:w-72">
           {templates.map((category: Category) => (
             <CategoryButton
               key={category.title}
@@ -52,7 +52,7 @@ export default function Templates() {
             />
           ))}
         </div>
-        <div className="grid flex-1 gap-6 md:grid-cols-2 place-content-start">
+        <div className="grid flex-1 gap-6 md:grid-cols-2 auto-rows-min md:place-content-start">
           {selectedCategory.templates.map((template) => (
             <TemplateButton
               key={template.title}
@@ -82,7 +82,7 @@ function CategoryButton({
     <Button
       variant="ghost"
       onClick={handleClick}
-      className={clsx("w-full justify-start", {
+      className={clsx("px-2 md:px-4 text-sm w-full truncate text-start block", {
         underline: category.title === selectedCategory.title,
       })}
     >
