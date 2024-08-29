@@ -29,7 +29,7 @@ export default function Templates() {
 
   const handleOnClick = (message: string) => {
     setValue("message", message);
-    router.push("/");
+    router.push("/chat");
   };
 
   const handleCategoryClick = (category: Category) => {

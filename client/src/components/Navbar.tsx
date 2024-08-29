@@ -40,9 +40,9 @@ export default function Navbar() {
 function Logo() {
   return (
     <Button variant="ghost">
-      <a href="/">
+      <Link href="/">
         <span className="font-bold">TrendPulse-AI</span>
-      </a>
+      </Link>
     </Button>
   );
 }
@@ -52,7 +52,7 @@ function NavMenu() {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
+          <Link href="/chat" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Chat
             </NavigationMenuLink>
