@@ -37,11 +37,10 @@ function HeroSection() {
     <section className="bg-accent">
       <div className="container flex flex-col-reverse items-center gap-8 py-32 h-fit md:flex-row">
         <div className="w-full prose md:w-1/2">
-          <h1 className="text-5xl">
-            Power Tool for <br />
-            Content Creators.
+          <h1 className="text-5xl text-balance">
+            Power Tool for Content Creators.
           </h1>
-          <p>
+          <p className="text-balance">
             Trendpulse AI is a free AI-powered assistant that combines the power
             of ChatGPT with unique data sources, including the HubSpot CRM, to
             help supercharge your work.
@@ -87,7 +86,7 @@ function FeaturesSection() {
         <div className="flex flex-col gap-8 md:flex-row">
           {cards.map((card) => (
             <Card key={card.title} className="py-4">
-              <CardHeader className="items-center text-center">
+              <CardHeader className="items-center text-center text-balance">
                 <span className="mb-4">{card.logo}</span>
                 <CardTitle>{card.title}</CardTitle>
                 <CardDescription>{card.description}</CardDescription>
@@ -101,33 +100,50 @@ function FeaturesSection() {
 }
 
 function ApplicationsSection() {
+  const applications = [
+    {
+      title: "Accelerated Sales Prospecting",
+      description:
+        "Draft blog posts & tweets, create AI generated images, and enjoy your in-house editor. ChatSpot is here to make content creation easier than ever.",
+      imageSrc: "/hero.png",
+      buttonHref: "/chat",
+      buttonText: "Start chatting free",
+    },
+    {
+      title: "Integrated Content Generation",
+      description:
+        "Draft blog posts & tweets, create AI generated images, and enjoy your in-house editor. ChatSpot is here to make content creation easier than ever.",
+      imageSrc: "/hero.png",
+      buttonHref: "/chat",
+      buttonText: "Start chatting free",
+      reverse: true,
+    },
+    {
+      title: "Deep Insights",
+      description:
+        "Knowledge is power. ChatSpot helps you dive deep into company data like funding rounds, locations, and technologies used.",
+      imageSrc: "/hero.png",
+      buttonHref: "/chat",
+      buttonText: "Start chatting free",
+    },
+  ];
+
   return (
     <section className="bg-accent">
-      <div className="container px-16 py-24 prose">
+      <div className="container px-16 py-24 prose text-balance">
         <h1 className="text-center">Trendpulse AI In Action</h1>
         <div className="flex flex-col gap-16">
-          <ApplicationItem
-            title="Accelerated Sales Prospecting"
-            description="Draft blog posts & tweets, create AI generated images, and enjoy your in-house editor. ChatSpot is here to make content creation easier than ever."
-            imageSrc="/hero.png"
-            buttonHref="/chat"
-            buttonText="Start chatting free"
-          />
-          <ApplicationItem
-            title="Integrated Content Generation"
-            description="Draft blog posts & tweets, create AI generated images, and enjoy your in-house editor. ChatSpot is here to make content creation easier than ever."
-            imageSrc="/hero.png"
-            buttonHref="/chat"
-            buttonText="Start chatting free"
-            reverse
-          />
-          <ApplicationItem
-            title="Deep Insights"
-            description="Knowledge is power. ChatSpot helps you dive deep into company data like funding rounds, locations, and technologies used."
-            imageSrc="/hero.png"
-            buttonHref="/chat"
-            buttonText="Start chatting free"
-          />
+          {applications.map((app, index) => (
+            <ApplicationItem
+              key={index}
+              title={app.title}
+              description={app.description}
+              imageSrc={app.imageSrc}
+              buttonHref={app.buttonHref}
+              buttonText={app.buttonText}
+              reverse={app.reverse}
+            />
+          ))}
         </div>
       </div>
     </section>
@@ -135,6 +151,32 @@ function ApplicationsSection() {
 }
 
 function CapabilitiesSection() {
+  const capabilities = [
+    {
+      title: "CRM Command Line",
+      description:
+        "Add contacts, create tasks, notes, and so much more. Move through your to-do-list with natural language.",
+      imageSrc: "/hero.png",
+    },
+    {
+      title: "CRM Summaries",
+      description:
+        "Use TrendPulse AI to instantly summarize your CRM data, making it easier than ever to get a birds-eye-view of your CRM.",
+      imageSrc: "/hero.png",
+    },
+    {
+      title: "CRM Analyst",
+      description:
+        "TrendPulse AI can help you understand your company performance in just a sentence. Ask Trendpulse AI for a bar chart of results, and you'll get results faster than any reporting product on the planet.",
+      imageSrc: "/hero.png",
+    },
+    {
+      title: "CRM Optimizer",
+      description:
+        "TrendPulse AI can help you optimize your CRM data to get the most out of your sales pipeline. Trendpulse AI can help you do that with a few clicks.",
+      imageSrc: "/hero.png",
+    },
+  ];
   return (
     <section className="bg-primary-foreground">
       <div className="container px-16 py-24 prose">
@@ -147,26 +189,14 @@ function CapabilitiesSection() {
           ]}
         >
           <CarouselContent>
-            <CapabilityItem
-              title="CRM Command Line"
-              description="Add contacts, create tasks, notes, and so much more. Move through your to-do-list with natural language."
-              imageSrc="/hero.png"
-            />
-            <CapabilityItem
-              title="CRM Summaries"
-              description="Use TrendPulse AI to instantly summarize your CRM data, making it easier than ever to get a birds-eye-view of your CRM."
-              imageSrc="/hero.png"
-            />
-            <CapabilityItem
-              title="CRM Analyst"
-              description="TrendPulse AI can help you understand your company performance in just a sentence. Ask ChatSpot for a bar chart of results, and you'll get results faster than any reporting product on the planet."
-              imageSrc="/hero.png"
-            />
-            <CapabilityItem
-              title="CRM Optimizer"
-              description="Ask TrendPulseAI for quick reports to get a feel for what needs action in your business today. For example, what are unowned deals of a high value? ChatSpot can deliver those in an instant. "
-              imageSrc="/hero.png"
-            />
+            {capabilities.map((capability) => (
+              <CapabilityItem
+                key={capability.title}
+                title={capability.title}
+                description={capability.description}
+                imageSrc={capability.imageSrc}
+              />
+            ))}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
