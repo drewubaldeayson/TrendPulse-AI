@@ -14,7 +14,9 @@ import { FieldValues, SubmitHandler, useFormContext } from "react-hook-form";
 export default function Home() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
+  const [loadingConversations, setLoadingConversations] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [user] = useAuthState(auth);
   const { setValue, setFocus } = useFormContext();
@@ -53,7 +55,7 @@ export default function Home() {
           getAllConversations();
           return;
         }
-        setConversation(conversations[0]);
+        setConversation(conversations[1]);
       })
       .catch((error) => {
         console.error(error);
@@ -140,6 +142,7 @@ export default function Home() {
     );
     setConversations(response.data);
     setConversation(response.data[0]);
+    setLoadingConversations(false);
   };
 
   const getAllMessages = async () => {
@@ -157,6 +160,7 @@ export default function Home() {
       }
     );
     setMessages(response.data);
+    setLoadingMessages(false);
   };
 
   useEffect(() => {
@@ -164,6 +168,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    setLoadingMessages(true);
     getAllMessages();
   }, [conversation]);
 
@@ -182,16 +187,20 @@ export default function Home() {
       <div className="flex">
         <WrapperSidebar>
           <ConversationNew handleNewConversation={handleNewConversation} />
-          <ConversationList
-            handleDeleteConversation={handleDeleteConversation}
-            conversations={conversations}
-            conversation={conversation}
-            setConversation={setConversation}
-          />
+          {loadingConversations || (
+            <ConversationList
+              handleDeleteConversation={handleDeleteConversation}
+              conversations={conversations}
+              conversation={conversation}
+              setConversation={setConversation}
+            />
+          )}
         </WrapperSidebar>
         <WrapperChat>
           <div className="flex-1">
-            <MessageList messages={messages} title={conversation?.title} />
+            {loadingMessages || (
+              <MessageList messages={messages} title={conversation?.title} />
+            )}
             <div ref={messagesEndRef} />
           </div>
           <MessageBox onSubmit={handleNewMessage} />
