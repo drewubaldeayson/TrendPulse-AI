@@ -1,6 +1,5 @@
 import MessageHeader from "./MessageHeader";
 import MessageSection from "./MessageSection";
-import { Skeleton } from "./ui/skeleton";
 
 export interface Message {
   role: string;
