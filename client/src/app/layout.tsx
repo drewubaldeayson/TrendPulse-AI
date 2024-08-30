@@ -29,8 +29,8 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Navbar />
         <RedirectLayout>
+          <Navbar />
           <FormProvider>{children}</FormProvider>
         </RedirectLayout>
       </body>
