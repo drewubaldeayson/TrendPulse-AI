@@ -13,6 +13,7 @@ type ConversationListProps = {
   conversations: Conversation[];
   conversation: Conversation | null;
   setConversation: Dispatch<SetStateAction<Conversation | null>>;
+  loading: boolean;
 };
 
 export default function ConversationList({
@@ -20,7 +21,10 @@ export default function ConversationList({
   conversations,
   conversation,
   setConversation,
+  loading,
 }: ConversationListProps) {
+  if (loading) return null;
+
   return (
     <>
       {conversations.map((currentConversation) => (

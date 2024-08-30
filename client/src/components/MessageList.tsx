@@ -1,5 +1,6 @@
 import MessageHeader from "./MessageHeader";
 import MessageSection from "./MessageSection";
+import { Skeleton } from "./ui/skeleton";
 
 export interface Message {
   role: string;
@@ -9,9 +10,16 @@ export interface Message {
 interface MessageListProps {
   messages: Message[];
   title: string | undefined;
+  loading: boolean;
 }
 
-export default function MessageList({ messages, title }: MessageListProps) {
+export default function MessageList({
+  messages,
+  title,
+  loading,
+}: MessageListProps) {
+  if (loading) return null;
+
   return (
     <article className="prose p-4 md:p-8 flex flex-col">
       <h3 className="text-center">{title}</h3>

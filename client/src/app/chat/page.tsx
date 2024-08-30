@@ -187,20 +187,21 @@ export default function Home() {
       <div className="flex">
         <WrapperSidebar>
           <ConversationNew handleNewConversation={handleNewConversation} />
-          {loadingConversations || (
-            <ConversationList
-              handleDeleteConversation={handleDeleteConversation}
-              conversations={conversations}
-              conversation={conversation}
-              setConversation={setConversation}
-            />
-          )}
+          <ConversationList
+            loading={loadingConversations}
+            handleDeleteConversation={handleDeleteConversation}
+            conversations={conversations}
+            conversation={conversation}
+            setConversation={setConversation}
+          />
         </WrapperSidebar>
         <WrapperChat>
           <div className="flex-1">
-            {loadingMessages || (
-              <MessageList messages={messages} title={conversation?.title} />
-            )}
+            <MessageList
+              loading={loadingMessages}
+              messages={messages}
+              title={conversation?.title}
+            />
             <div ref={messagesEndRef} />
           </div>
           <MessageBox onSubmit={handleNewMessage} />
