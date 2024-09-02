@@ -36,11 +36,11 @@ export default function SignIn() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-primary-foreground">
+    <main className="flex flex-col items-center justify-center min-h-screen px-4 bg-primary-foreground">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(signInHandler)}
-          className="border p-8 rounded bg-white prose min-w-[32rem] space-y-6"
+          className="border p-8 rounded bg-white prose w-full max-w-[32rem] space-y-6"
         >
           <h1 className="text-center">TrendPulse AI</h1>
           <h2 className="m-0">Sign In</h2>
@@ -54,7 +54,7 @@ export default function SignIn() {
                 <FormControl>
                   <Input placeholder="johndoe@example.com" {...field} />
                 </FormControl>
-                <FormMessage className="absolute right-0 top-0" />
+                <FormMessage className="absolute top-0 right-0" />
               </FormItem>
             )}
           />
@@ -68,7 +68,7 @@ export default function SignIn() {
                 <FormControl>
                   <Input type="password" placeholder="••••••••" {...field} />
                 </FormControl>
-                <FormMessage className="absolute right-0 top-0" />
+                <FormMessage className="absolute top-0 right-0" />
               </FormItem>
             )}
           />
