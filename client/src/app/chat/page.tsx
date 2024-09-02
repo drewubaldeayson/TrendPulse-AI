@@ -13,7 +13,8 @@ import { FieldValues, SubmitHandler, useFormContext } from "react-hook-form";
 
 export default function Home() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [conversation, setConversation] = useState<Conversation | null>(null);
+  const [currentConversation, setCurrentConversation] =
+    useState<Conversation | null>(null);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [messages, setMessages] = useState<Message[]>([]);
   const [loadingMessages, setLoadingMessages] = useState(true);
@@ -36,7 +37,10 @@ export default function Home() {
       { id: response.data.id, title: response.data.title },
       ...prevConversations,
     ]);
-    setConversation({ id: response.data.id, title: response.data.title });
+    setCurrentConversation({
+      id: response.data.id,
+      title: response.data.title,
+    });
   };
 
   const handleDeleteConversation = async (id: string) => {
@@ -55,7 +59,7 @@ export default function Home() {
           getAllConversations();
           return;
         }
-        setConversation(conversations[1]);
+        setCurrentConversation(conversations[1]);
       })
       .catch((error) => {
         console.error(error);
@@ -88,7 +92,7 @@ export default function Home() {
     ]);
 
     const response = await axios.post(
-      `http://localhost:5000/api/conversations/${conversation?.id}`,
+      `http://localhost:5000/api/conversations/${currentConversation?.id}`,
       {
         message: submitMessage,
       },
@@ -114,7 +118,7 @@ export default function Home() {
         id: response.data.id,
         title: response.data.title,
       };
-      setConversation(updatedConversation);
+      setCurrentConversation(updatedConversation);
 
       setConversations((prevConversations) =>
         // Find conversation id from conversations and replace title
@@ -141,7 +145,7 @@ export default function Home() {
       }
     );
     setConversations(response.data);
-    setConversation(response.data[0]);
+    setCurrentConversation(response.data[0]);
     setLoadingConversations(false);
   };
 
@@ -152,7 +156,7 @@ export default function Home() {
       return;
     }
     const response = await axios.get(
-      `http://localhost:5000/api/conversations/${conversation?.id}`,
+      `http://localhost:5000/api/conversations/${currentConversation?.id}`,
       {
         headers: {
           Authorization: token,
@@ -170,7 +174,7 @@ export default function Home() {
   useEffect(() => {
     setLoadingMessages(true);
     getAllMessages();
-  }, [conversation]);
+  }, [currentConversation]);
 
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -191,8 +195,8 @@ export default function Home() {
             loading={loadingConversations}
             handleDeleteConversation={handleDeleteConversation}
             conversations={conversations}
-            conversation={conversation}
-            setConversation={setConversation}
+            currentConversation={currentConversation}
+            setCurrentConversation={setCurrentConversation}
           />
         </WrapperSidebar>
         <WrapperChat>
@@ -200,7 +204,7 @@ export default function Home() {
             <MessageList
               loading={loadingMessages}
               messages={messages}
-              title={conversation?.title}
+              title={currentConversation?.title}
             />
             <div ref={messagesEndRef} />
           </div>

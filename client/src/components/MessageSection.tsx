@@ -31,7 +31,7 @@ export default function MessageSection({ role, content }: MessageSectionProps) {
       })}
     >
       <h4
-        className={clsx({
+        className={clsx("animate-fade-in", {
           hidden: role === "user",
         })}
       >

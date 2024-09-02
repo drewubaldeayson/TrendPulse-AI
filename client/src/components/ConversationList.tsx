@@ -11,42 +11,42 @@ export interface Conversation {
 type ConversationListProps = {
   handleDeleteConversation: (id: string) => void;
   conversations: Conversation[];
-  conversation: Conversation | null;
-  setConversation: Dispatch<SetStateAction<Conversation | null>>;
+  currentConversation: Conversation | null;
+  setCurrentConversation: Dispatch<SetStateAction<Conversation | null>>;
   loading: boolean;
 };
 
 export default function ConversationList({
   handleDeleteConversation,
   conversations,
-  conversation,
-  setConversation,
+  currentConversation,
+  setCurrentConversation,
   loading,
 }: ConversationListProps) {
   if (loading) return null;
 
   return (
     <>
-      {conversations.map((currentConversation) => (
+      {conversations.map((conversation) => (
         <div className="relative group">
           <Button
             variant="ghost"
-            key={currentConversation.id}
-            onClick={() => setConversation(currentConversation)}
+            key={conversation.id}
+            onClick={() => setCurrentConversation(conversation)}
             className={clsx(
               "px-2 md:px-4 text-sm w-full truncate text-start block",
               {
-                underline: currentConversation.id === conversation?.id,
+                underline: conversation.id === currentConversation?.id,
               }
             )}
           >
-            {currentConversation.title}
+            {conversation.title}
           </Button>
           <Button
             variant="ghost"
             size="icon"
             className="absolute right-0 -translate-y-1/2 opacity-0 top-1/2 group-hover:opacity-100 bg-primary-foreground"
-            onClick={() => handleDeleteConversation(currentConversation.id)}
+            onClick={() => handleDeleteConversation(conversation.id)}
           >
             <FaRegTrashCan />
           </Button>
