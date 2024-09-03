@@ -36,7 +36,7 @@ function Logo() {
   return (
     <Link href="/">
       <Button variant="ghost">
-        <span className="md:text-xl font-black">TrendPulse AI</span>
+        <span className="font-black md:text-xl">TrendPulse AI</span>
       </Button>
     </Link>
   );

@@ -22,7 +22,7 @@ export default function MessageBox({ onSubmit }: MessageBoxProps) {
   return (
     <div className="sticky bottom-0">
       <form
-        className="px-4 md:px-16 pb-8 flex gap-2 bg-white"
+        className="flex gap-2 px-4 pb-8 bg-white md:px-16"
         onSubmit={handleSubmit(onSubmit)}
       >
         <Textarea

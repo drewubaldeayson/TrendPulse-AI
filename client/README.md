@@ -4,15 +4,16 @@
 
 1. **Install Dependencies**
 
-   If you encounter issues with `npm install`, try removing the `pnpm-lock` file if it exists, as it might be causing conflicts:
+   First, try installing the server dependencies using `pnpm`. If `pnpm` is not installed or if you encounter issues, remove the `pnpm-lock.yaml` file if it exists and use `npm` to install dependencies:
+
+   ```bash
+   pnpm --prefix ./server install
+   ```
+
+   If `pnpm` is not available or you face issues:
 
    ```bash
    rm -f ./server/pnpm-lock.yaml
-   ```
-
-   Then install the server dependencies using `npm` with the `--prefix` option:
-
-   ```bash
    npm --prefix ./server install
    ```
 
@@ -42,15 +43,16 @@
 
 1. **Install Dependencies**
 
-   If you encounter issues with `npm install`, try removing the `pnpm-lock` file if it exists, as it might be causing conflicts:
+   First, try installing the client dependencies using `pnpm`. If `pnpm` is not installed or if you encounter issues, remove the `pnpm-lock.yaml` file if it exists and use `npm` to install dependencies:
+
+   ```bash
+   pnpm --prefix ./client install
+   ```
+
+   If `pnpm` is not available or you face issues:
 
    ```bash
    rm -f client/pnpm-lock.yaml
-   ```
-
-   Then install the client dependencies using `npm` with the `--prefix` option:
-
-   ```bash
    npm --prefix ./client install
    ```
 
@@ -80,5 +82,3 @@
    ```bash
    npm --prefix ./client run dev
    ```
-
----

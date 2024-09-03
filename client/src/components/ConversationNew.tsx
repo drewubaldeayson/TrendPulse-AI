@@ -9,7 +9,7 @@ export default function ConversationNew({
   handleNewConversation,
 }: ConversationNewProps) {
   return (
-    <div className="flex px-2 md:px-4 prose justify-between">
+    <div className="flex justify-between px-2 prose md:px-4">
       <h4 className="m-0">Chats</h4>
       <Button
         variant="outline"

@@ -20,7 +20,7 @@ export default function MessageList({
   if (loading) return null;
 
   return (
-    <article className="prose p-4 md:p-8 flex flex-col">
+    <article className="flex flex-col p-4 prose md:p-8">
       <h3 className="text-center">{title}</h3>
       {messages.length === 0 ? (
         <MessageHeader />
