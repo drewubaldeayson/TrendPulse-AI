@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+### Server Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Install Dependencies**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   If you encounter issues with `npm install`, try removing the `pnpm-lock` file if it exists, as it might be causing conflicts:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   rm -f ./server/pnpm-lock.yaml
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   Then install the server dependencies using `npm` with the `--prefix` option:
 
-## Learn More
+   ```bash
+   npm --prefix ./server install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Create and Configure `.env` File**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   Create a new file named `.env` in the `server` directory by copying the contents of `.env.example`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+   ```bash
+   cp server/.env.example server/.env
+   ```
 
-## Deploy on Vercel
+   Edit `server/.env` and add your ChatGPT API key:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   ```makefile
+   OPENAI_API_KEY=YOUR_CHATGPT_API_KEY_HERE
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. **Run the Server**
+
+   Start the server using `npm` with the `--prefix` option:
+
+   ```bash
+   npm --prefix ./server run dev
+   ```
+
+### Client Setup
+
+1. **Install Dependencies**
+
+   If you encounter issues with `npm install`, try removing the `pnpm-lock` file if it exists, as it might be causing conflicts:
+
+   ```bash
+   rm -f client/pnpm-lock.yaml
+   ```
+
+   Then install the client dependencies using `npm` with the `--prefix` option:
+
+   ```bash
+   npm --prefix ./client install
+   ```
+
+2. **Create and Configure `.env.local` File**
+
+   Create a new file named `.env.local` in the `client` directory by copying the contents of `.env.local.example`:
+
+   ```bash
+   cp ./client/.env.local.example ./client/.env.local
+   ```
+
+   Edit `client/.env.local` and add your Firebase API keys:
+
+   ```makefile
+   NEXT_PUBLIC_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY_HERE
+   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN_HERE
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID_HERE
+   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=YOUR_FIREBASE_STORAGE_BUCKET_HERE
+   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=YOUR_FIREBASE_MESSAGING_SENDER_ID_HERE
+   NEXT_PUBLIC_FIREBASE_APP_ID=YOUR_FIREBASE_APP_ID_HERE
+   ```
+
+3. **Run the Client**
+
+   Start the client using `npm` with the `--prefix` option:
+
+   ```bash
+   npm --prefix ./client run dev
+   ```
+
+---
