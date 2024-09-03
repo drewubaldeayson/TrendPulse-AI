@@ -20,6 +20,12 @@ interface AuthenticatedRequest extends Request {
   user?: any;
 }
 
+/**
+ * Middleware to check if the request is authenticated.
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next middleware function.
+ */
 const isAuthenticated = (
   req: AuthenticatedRequest,
   res: Response,
@@ -45,7 +51,15 @@ const isAuthenticated = (
     });
 };
 
-// Get all conversations from a specific user
+/**
+ * Get all conversations for the authenticated user.
+ * @route GET /api/conversations
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @returns {Response} 200 - An array of conversation objects.
+ * @returns {Response} 400 - Error message if user ID is missing.
+ * @returns {Response} 500 - Error message if failed to retrieve conversations.
+ */
 app.get(
   "/api/conversations",
   isAuthenticated,
@@ -99,7 +113,15 @@ app.get(
   }
 );
 
-// Create a new conversation
+/**
+ * Create a new conversation for the authenticated user.
+ * @route POST /api/conversations
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @returns {Response} 200 - The created conversation object.
+ * @returns {Response} 400 - Error message if user ID is missing.
+ * @returns {Response} 500 - Error message if failed to create conversation.
+ */
 app.post(
   "/api/conversations",
   isAuthenticated,
@@ -130,7 +152,16 @@ app.post(
   }
 );
 
-// Delete a conversation
+/**
+ * Delete a specific conversation for the authenticated user.
+ * @route DELETE /api/conversations/:conversationId
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @param {string} req.params.conversationId - The ID of the conversation to delete.
+ * @returns {Response} 204 - No content if conversation is successfully deleted.
+ * @returns {Response} 400 - Error message if user ID or conversation ID is missing.
+ * @returns {Response} 500 - Error message if failed to delete conversation.
+ */
 app.delete(
   "/api/conversations/:conversationId",
   isAuthenticated,
@@ -163,7 +194,16 @@ app.delete(
   }
 );
 
-// Get all messages in a specific conversation
+/**
+ * Get all messages in a specific conversation for the authenticated user.
+ * @route GET /api/conversations/:conversationId
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @param {string} req.params.conversationId - The ID of the conversation.
+ * @returns {Response} 200 - An array of message objects.
+ * @returns {Response} 400 - Error message if user ID or conversation ID is missing.
+ * @returns {Response} 500 - Error message if failed to fetch messages.
+ */
 app.get(
   "/api/conversations/:conversationId",
   isAuthenticated,
@@ -207,7 +247,18 @@ app.get(
   }
 );
 
-// Post a new message in a specific conversation
+/**
+ * Post a new message to a specific conversation for the authenticated user.
+ * @route POST /api/conversations/:conversationId
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @param {string} req.params.conversationId - The ID of the conversation.
+ * @param {Object} req.body - The request body.
+ * @param {string} req.body.message - The content of the message to post.
+ * @returns {Response} 200 - The assistant's response and possibly the updated conversation title.
+ * @returns {Response} 400 - Error message if user ID is missing or message content is missing.
+ * @returns {Response} 500 - Error message if failed to handle the message.
+ */
 app.post(
   "/api/conversations/:conversationId",
   isAuthenticated,
@@ -316,7 +367,13 @@ app.post(
   }
 );
 
-// Health Check
+/**
+ * Health check endpoint to verify server status.
+ * @route GET /api/healthcheck
+ * @param {AuthenticatedRequest} _req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @returns {Response} 200 - Health check status message.
+ */
 app.get(
   "/api/healthcheck",
   isAuthenticated,
