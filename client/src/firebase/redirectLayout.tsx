@@ -1,4 +1,5 @@
 "use client";
+
 import { useAuthState } from "react-firebase-hooks/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { auth } from "@/firebase/config";
@@ -15,30 +16,29 @@ export default function RedirectLayout({
   const [redirecting, setRedirecting] = useState(true);
 
   useEffect(() => {
-    // Only run the redirect logic when loading is complete
-    if (loading) {
-      return;
-    }
+    // If still loading, do nothing
+    if (loading) return;
 
+    // Check if current path is for sign-in/sign-up
     const isAuthPath = pathname === "/sign-in" || pathname === "/sign-up";
+    // Check if current path requires authentication
     const isProtectedPath = !isAuthPath && pathname !== "/";
 
     if (user && isAuthPath) {
-      // User is logged in but trying to access sign-in or sign-up
+      // Redirect logged-in users away from sign-in/sign-up pages
       router.push("/chat");
     } else if (!user && isProtectedPath) {
-      // User is not logged in and trying to access a protected path
+      // Redirect unauthenticated users away from protected pages
       router.push("/sign-in");
     } else {
-      // No redirection needed
+      // No redirection needed, allow rendering children
       setRedirecting(false);
     }
   }, [loading, user, pathname, router]);
 
-  // Prevent rendering children while redirecting or loading
-  if (redirecting || loading) {
-    return null;
-  }
+  // Return nothing while redirecting or loading
+  if (redirecting || loading) return null;
 
+  // Render children if no redirection is needed
   return <>{children}</>;
 }

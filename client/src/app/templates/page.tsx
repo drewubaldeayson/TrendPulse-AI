@@ -109,7 +109,7 @@ function TemplateButton({
           <Button
             variant="outline"
             onClick={() => handleOnClick(message)}
-            className="w-full py-6 font-bold bg-accent"
+            className="w-full py-6 font-bold bg-accent animate-fade-in"
           >
             {title}
           </Button>
