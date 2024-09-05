@@ -33,10 +33,10 @@
 
 3. **Run the Server**
 
-   Start the server using `npm` with the `--prefix` option:
+   Start the server using `npm`:
 
    ```bash
-   npm --prefix ./server run dev
+   npm run dev-server
    ```
 
 ### Client Setup
@@ -77,8 +77,8 @@
 
 3. **Run the Client**
 
-   Start the client using `npm` with the `--prefix` option:
+   Start the client using `npm`:
 
    ```bash
-   npm --prefix ./client run dev
+   npm run dev-client
    ```
