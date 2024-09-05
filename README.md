@@ -39,6 +39,12 @@
    npm run dev-server
    ```
 
+4. **Test the Server**
+   Test the server using `npm`:
+   ```bash
+   npm run test-server
+   ```
+
 ### Client Setup
 
 1. **Install Dependencies**

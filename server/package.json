@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/src/index.js",
   "scripts": {
+    "test": "jest",
     "build": "npx tsc",
     "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts"
