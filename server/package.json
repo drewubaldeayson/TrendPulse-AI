@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand --detectOpenHandles",
     "build": "npx tsc",
     "start": "node dist/src/index.js",
     "dev": "nodemon src/index.ts"
@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/supertest": "^6.0.2",
     "axios": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
