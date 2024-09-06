@@ -1,36 +1,56 @@
 import request from "supertest";
 import app from "../app";
-import { admin } from "../firebase";
+import * as admin from "firebase-admin";
 
-jest.useFakeTimers();
+// Mock Firebase Admin
+jest.mock("firebase-admin", () => {
+  const auth = {
+    verifyIdToken: jest.fn(),
+  };
 
-jest.mock("../firebase", () => ({
-  admin: {
-    auth: () => ({
-      verifyIdToken: jest.fn(),
-    }),
-  },
-}));
+  return {
+    initializeApp: jest.fn(),
+    credential: {
+      cert: jest.fn(),
+    },
+    auth: () => auth,
+    firestore: jest.fn(),
+  };
+});
 
+// Access the mock for `verifyIdToken`
 const mockVerifyIdToken = admin.auth().verifyIdToken as jest.Mock;
 
-let testServer: any;
+let server: any;
 
 describe("Health check endpoint", () => {
   beforeAll((done) => {
-    testServer = app.listen(5001, () => {
-      console.log("Server is running on http://localhost:5001");
-    });
-    done();
+    server = app.listen(0, done);
+  });
+
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterAll((done) => {
-    testServer.close(done);
+    server.close(done);
   });
 
   it("should return 401 if no token is provided", async () => {
     const response = await request(app).get("/api/healthcheck");
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: "No token found" });
+  });
 
+  it("should return 401 if invalid token is provided", async () => {
+    // Simulate an invalid token by rejecting the promise
+    mockVerifyIdToken.mockRejectedValue(new Error("Invalid token"));
+
+    const response = await request(app)
+      .get("/api/healthcheck")
+      .set("Authorization", "invalid-token");
+
+    expect(mockVerifyIdToken).toHaveBeenCalledWith("invalid-token");
     expect(response.status).toBe(401);
   });
 });

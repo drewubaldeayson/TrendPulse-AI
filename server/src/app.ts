@@ -24,29 +24,27 @@ interface AuthenticatedRequest extends Request {
  * @param {Response} res - The response object.
  * @param {NextFunction} next - The next middleware function.
  */
-const isAuthenticated = (
+const isAuthenticated = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
+  if (!req.headers.authorization) {
     console.error("No token found");
     return res.status(401).json({ error: "No token found" });
   }
 
-  admin
-    .auth()
-    .verifyIdToken(token)
-    .then((decodedToken) => {
-      req.user = decodedToken;
-      next();
-    })
-    .catch((error) => {
-      console.error("Error verifying token:", error);
-      res.status(401).json({ error: "Unauthorized" });
-    });
+  const token = req.headers.authorization.startsWith("Bearer ")
+    ? req.headers.authorization.slice(7)
+    : req.headers.authorization;
+
+  try {
+    req.user = await admin.auth().verifyIdToken(token);
+    next();
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    res.status(401).json({ error: "Unauthorized" });
+  }
 };
 
 /**
