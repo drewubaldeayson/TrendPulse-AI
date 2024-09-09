@@ -81,7 +81,7 @@ function FeaturesSection() {
   ];
   return (
     <section className="bg-primary-foreground">
-      <div className="container py-24 prose">
+      <div className="container py-24">
         <h1 className="text-center">AI that means business</h1>
         <div className="flex flex-col gap-8 md:flex-row">
           {cards.map((card) => (

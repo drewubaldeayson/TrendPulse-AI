@@ -1,30 +1,91 @@
+import {
+  Accordion,
+  AccordionContent,
+  AccordionTrigger,
+  AccordionItem,
+} from "@/components/ui/accordion";
+
 export default function FAQ() {
   return (
     <main>
-      <section className="bg-primary-foreground">
-        <div className="container py-8 prose text-center text-balance lg:px-32">
-          <h1>Trendpulse FAQ</h1>
-          <p>
-            The purpose of these FAQs is to provide you with high-level
-            information about TrendPulse. Your use of TrendPulse is governed by
-            our Terms of Service. We strive to provide accurate information, but
-            please be aware that these FAQs may be updated or revised as our
-            platform evolves.
-          </p>
-        </div>
-      </section>
-      <section className="bg-accent">
-        <div className="container py-8 prose">
-          <h1>FAQs</h1>
-          <p>
-            The purpose of these FAQs is to provide you with high-level
-            information about TrendPulse. Your use of TrendPulse is governed by
-            our Terms of Service. We strive to provide accurate information, but
-            please be aware that these FAQs may be updated or revised as our
-            platform evolves.
-          </p>
-        </div>
-      </section>
+      <TitleSection />
+      <FAQSection />
+      <DisclaimerSection />
     </main>
   );
+}
+
+function TitleSection() {
+  return (
+    <section className="bg-primary-foreground">
+      <div className="container py-16 prose text-center text-balance">
+        <h1>Trendpulse FAQ</h1>
+        <p>
+          The purpose of these FAQs is to provide you with high-level
+          information about TrendPulse. Your use of TrendPulse is governed by
+          our Terms of Service. We strive to provide accurate information, but
+          please be aware that these FAQs may be updated or revised as our
+          platform evolves.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  const faqs = [
+    {
+      question: "Does TrendPulse have access to all of my TrendPulse data?",
+      answer:
+        "TrendPulse will access the data you request it to surface via interacting with TrendPulse. TrendPulse customer data is not preemptively synchronized or downloaded to a separate database. Access to data within a TrendPulse account is initiated based on a user-submitted prompt. It occurs on an 'as needed' basis.",
+    },
+    {
+      question:
+        "What data does TrendPulse share with OpenAI? How is it being used by OpenAI?",
+      answer:
+        "The prompts you submit to TrendPulse will be shared with OpenAI. For example, if you ask TrendPulse to 'add xyz@gmail.com to my CRM', the text in quotes will be shared with OpenAI. Please avoid sharing any sensitive information in your prompts. OpenAI will not use your prompts to train or improve their models. OpenAI will use your prompts for content moderation purposes and will delete those prompts after 30 days. You can learn more about how OpenAI uses your prompts by reviewing OpenAI's [API Data Usage Policy](https://openai.com/policies/api-data-usage-policies?hubs_content=chatspot.ai%2F&hubs_content-cta=header__menu-link).",
+    },
+    {
+      question:
+        "What data is being shared with third parties when I use TrendPulse?",
+      answer:
+        "Your user prompts (e.g., when you ask TrendPulse to 'add xyz@gmail.com to my CRM') will be shared with OpenAI and stored by TrendPulse. Your user prompts and customer data in your TrendPulse account will not be shared with other third parties in a way that is attributable to you. TrendPulse will parse your user prompts and submit 'queries' to other third parties that provide information in TrendPulse results; these queries will not be attributable to you as a user. You may choose to integrate your Google Drive account with TrendPulse, but TrendPulse only has access to documents it creates (e.g., Google Sheets and Slides) – it cannot read any other Google documents in your account.",
+    },
+    {
+      question:
+        "If my TrendPulse account is hosted on the EU data center, and I use TrendPulse, will my data leave the EU?",
+      answer:
+        "Yes. As stated in OpenAI's [API Data Usage Policy](https://openai.com/policies/api-data-usage-policies?hubs_content=chatspot.ai%2F&hubs_content-cta=header__menu-link), OpenAI processes and stores data in the US. TrendPulse has signed a Data Processing Agreement with OpenAI with adequate data transfer mechanisms in place. TrendPulse will also store your prompts and inputs on its product infrastructure in the US.",
+    },
+    {
+      question:
+        "What is the source of the output? How accurate are the results?",
+      answer:
+        "TrendPulse uses a variety of services to respond to your questions and prompts. For example, if you ask TrendPulse for news about a specific company, TrendPulse will use a news API to surface relevant news stories. This tool is still in beta, so you should verify the accuracy of content generated by TrendPulse.",
+    },
+    {
+      question: "How does TrendPulse handle user permissions?",
+      answer:
+        "Any TrendPulse user that has sufficient permission to install applications can install TrendPulse (this is controlled by user role permissioning in TrendPulse). TrendPulse limits users to accessing only the types of data permitted, based on their OAuth access grant. However, OAuth applications do not enforce security for individual objects. So, if a user has the ability to view contacts, they will be able to view all contacts.",
+    },
+  ];
+
+  return (
+    <section className="bg-accent">
+      <div className="container py-16 lg:px-16">
+        <Accordion type="single" collapsible>
+          {faqs.map((faq, index) => (
+            <AccordionItem key={index} value={"item-" + index + 1}>
+              <AccordionTrigger>{faq.question}</AccordionTrigger>
+              <AccordionContent>{faq.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
+  );
+}
+
+function DisclaimerSection() {
+  return null;
 }
