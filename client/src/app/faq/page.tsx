@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import {
   Accordion,
   AccordionContent,
@@ -7,19 +8,20 @@ import {
 
 export default function FAQ() {
   return (
-    <main>
+    <main className="flex flex-col min-h-screen">
       <TitleSection />
       <FAQSection />
       <DisclaimerSection />
+      <Footer />
     </main>
   );
 }
 
 function TitleSection() {
   return (
-    <section className="bg-primary-foreground">
-      <div className="container py-16 prose text-center text-balance">
-        <h1>Trendpulse FAQ</h1>
+    <section className="bg-accent">
+      <div className="container py-32 prose text-center text-balance">
+        <h1 className="lg:text-5xl">Trendpulse FAQ</h1>
         <p>
           The purpose of these FAQs is to provide you with high-level
           information about TrendPulse. Your use of TrendPulse is governed by
@@ -43,7 +45,7 @@ function FAQSection() {
       question:
         "What data does TrendPulse share with OpenAI? How is it being used by OpenAI?",
       answer:
-        "The prompts you submit to TrendPulse will be shared with OpenAI. For example, if you ask TrendPulse to 'add xyz@gmail.com to my CRM', the text in quotes will be shared with OpenAI. Please avoid sharing any sensitive information in your prompts. OpenAI will not use your prompts to train or improve their models. OpenAI will use your prompts for content moderation purposes and will delete those prompts after 30 days. You can learn more about how OpenAI uses your prompts by reviewing OpenAI's [API Data Usage Policy](https://openai.com/policies/api-data-usage-policies?hubs_content=chatspot.ai%2F&hubs_content-cta=header__menu-link).",
+        "The prompts you submit to TrendPulse will be shared with OpenAI. For example, if you ask TrendPulse to 'add xyz@gmail.com to my CRM', the text in quotes will be shared with OpenAI. Please avoid sharing any sensitive information in your prompts. OpenAI will not use your prompts to train or improve their models. OpenAI will use your prompts for content moderation purposes and will delete those prompts after 30 days. You can learn more about how OpenAI uses your prompts by reviewing OpenAI's API Data Usage Policy.",
     },
     {
       question:
@@ -55,7 +57,7 @@ function FAQSection() {
       question:
         "If my TrendPulse account is hosted on the EU data center, and I use TrendPulse, will my data leave the EU?",
       answer:
-        "Yes. As stated in OpenAI's [API Data Usage Policy](https://openai.com/policies/api-data-usage-policies?hubs_content=chatspot.ai%2F&hubs_content-cta=header__menu-link), OpenAI processes and stores data in the US. TrendPulse has signed a Data Processing Agreement with OpenAI with adequate data transfer mechanisms in place. TrendPulse will also store your prompts and inputs on its product infrastructure in the US.",
+        "Yes. As stated in OpenAI's API Data Usage Policy, OpenAI processes and stores data in the US. TrendPulse has signed a Data Processing Agreement with OpenAI with adequate data transfer mechanisms in place. TrendPulse will also store your prompts and inputs on its product infrastructure in the US.",
     },
     {
       question:
@@ -71,12 +73,14 @@ function FAQSection() {
   ];
 
   return (
-    <section className="bg-accent">
+    <section className="flex-1 bg-primary-foreground">
       <div className="container py-16 lg:px-16">
         <Accordion type="single" collapsible>
           {faqs.map((faq, index) => (
             <AccordionItem key={index} value={"item-" + index + 1}>
-              <AccordionTrigger>{faq.question}</AccordionTrigger>
+              <AccordionTrigger className="font-bold">
+                {faq.question}
+              </AccordionTrigger>
               <AccordionContent>{faq.answer}</AccordionContent>
             </AccordionItem>
           ))}
@@ -87,5 +91,17 @@ function FAQSection() {
 }
 
 function DisclaimerSection() {
-  return null;
+  return (
+    <section className="bg-accent">
+      <div className="container py-16 prose lg:px-16">
+        <strong>Disclaimer:</strong> This information is not legal advice,
+        rather it aims to bring some transparency and clarity to the users of
+        this tool, as AI is a rapidly evolving technology that poses several
+        legal, security and privacy issues. This information is not intended to
+        be legal advice, where an attorney applies the law to your specific
+        circumstances. If you would like advice on your interpretation of this
+        information or its accuracy, you should consult an attorney.
+      </div>
+    </section>
+  );
 }

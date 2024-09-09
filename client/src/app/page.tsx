@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaMagnifyingGlass, FaRegMessage, FaRegUser } from "react-icons/fa6";
 import Autoplay from "embla-carousel-autoplay";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -27,7 +28,7 @@ export default function Home() {
       <FeaturesSection />
       <ApplicationsSection />
       <CapabilitiesSection />
-      <FooterSection />
+      <Footer />
     </main>
   );
 }
@@ -203,16 +204,6 @@ function CapabilitiesSection() {
         </Carousel>
       </div>
     </section>
-  );
-}
-
-function FooterSection() {
-  return (
-    <footer className="flex items-center justify-between h-16 px-4 border-t bg-primary-foreground">
-      <p className="w-full text-center opacity-50">
-        &copy; {new Date().getFullYear()} TrendPulse AI. All rights reserved.
-      </p>
-    </footer>
   );
 }
 
