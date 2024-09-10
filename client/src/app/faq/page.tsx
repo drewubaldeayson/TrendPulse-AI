@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import {
   Accordion,
   AccordionContent,
@@ -12,7 +11,6 @@ export default function FAQ() {
       <TitleSection />
       <FAQSection />
       <DisclaimerSection />
-      <Footer />
     </main>
   );
 }

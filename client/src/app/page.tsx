@@ -19,7 +19,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaMagnifyingGlass, FaRegMessage, FaRegUser } from "react-icons/fa6";
 import Autoplay from "embla-carousel-autoplay";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
@@ -28,7 +27,6 @@ export default function Home() {
       <FeaturesSection />
       <ApplicationsSection />
       <CapabilitiesSection />
-      <Footer />
     </main>
   );
 }

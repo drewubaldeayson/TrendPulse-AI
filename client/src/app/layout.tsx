@@ -5,6 +5,7 @@ import RedirectLayout from "@/firebase/RedirectLayout";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import FormProvider from "@/components/FormProvider";
+import Footer from "@/components/Footer";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({
         <RedirectLayout>
           <Navbar />
           <FormProvider>{children}</FormProvider>
+          <Footer />
         </RedirectLayout>
       </body>
     </html>
