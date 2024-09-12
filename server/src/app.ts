@@ -3,6 +3,7 @@ import { admin, firestore } from "./firebase";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import { getChatGPTResponse } from "./chatgpt";
+import { scrapeInstagram } from "./instagram";
 
 const app = express();
 
@@ -358,6 +359,28 @@ app.post(
       res.json(response);
     } catch (error) {
       console.error("Error handling message:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
+/**
+ *
+ *
+ */
+app.get(
+  "/api/instagram/:account",
+  async (req: AuthenticatedRequest, res: Response) => {
+    const { account } = req.params;
+
+    if (!account) {
+      return res.status(400).json({ error: "Missing account" });
+    }
+
+    try {
+      await scrapeInstagram(account);
+    } catch (error) {
+      console.error("Error scraping Instagram:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }
