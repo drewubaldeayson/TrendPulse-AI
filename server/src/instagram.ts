@@ -105,6 +105,30 @@ const getFollowers = async (page: PageWithCursor) => {
   return formatNumber(followers);
 };
 
+const loadAllPostsByScrolling = async (
+  page: PageWithCursor,
+  maxScrolls: number = 2
+) => {
+  let scrollCount = 0;
+  let lastHeight = 0;
+
+  while (scrollCount < maxScrolls) {
+    console.log(`Scrolled down to load posts ${scrollCount + 1} times`);
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await delay(2000); // Wait for new content to load
+
+    const newHeight = await page.evaluate(() => document.body.scrollHeight);
+
+    if (newHeight === lastHeight) {
+      break;
+    }
+
+    lastHeight = newHeight;
+    scrollCount++;
+  }
+};
+
 const scrapeInstagram = async (account: string) => {
   console.log("Connecting to browser...");
 
@@ -119,13 +143,17 @@ const scrapeInstagram = async (account: string) => {
     const profilePic = await getProfilePicture(page);
     const followers = await getFollowers(page);
 
+    await loadAllPostsByScrolling(page, 2);
+
     const data = { username, profilePic, followers };
     return data;
   } catch (error) {
     console.error(error);
   } finally {
-    console.log("Closing browser...");
-    if (!debugMode) await browser.close();
+    if (!debugMode) {
+      console.log("Closing browser...");
+      await browser.close();
+    }
   }
 };
 
