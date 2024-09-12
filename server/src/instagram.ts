@@ -129,7 +129,45 @@ const loadAllPostsByScrolling = async (
   }
 };
 
-const scrapeInstagram = async (account: string) => {
+const getLikesAndComments = async (page: PageWithCursor) => {
+  console.log("Fetching posts...");
+
+  let posts = await page.$$("main > div > div:nth-child(3) > div div > a");
+  console.log(
+    `${posts.length} Posts fetched. Processing likes and comments...`
+  );
+  const likes: number[] = [];
+  const comments: number[] = [];
+
+  for (let i = 0; i < posts.length; i++) {
+    posts = await page.$$("main > div > div:nth-child(3) > div div > a");
+    const post = posts[i];
+    await post.hover();
+
+    await delay(10);
+
+    const [like, comment] = await post.evaluate((post) => {
+      const elements = post.querySelectorAll("div > ul > li > span");
+      const like = elements[0]?.textContent;
+      const comment = elements[2]?.textContent;
+
+      if (!like || !comment) {
+        throw new Error("Failed to fetch likes and comments.");
+      }
+
+      return [like, comment];
+    });
+
+    likes.push(formatNumber(like));
+    comments.push(formatNumber(comment));
+  }
+
+  return { likes, comments };
+};
+
+const scrapeInstagram = async (
+  account: string
+): Promise<InstagramData | undefined> => {
   console.log("Connecting to browser...");
 
   const debugMode = process.env.IG_DEBUG_MODE === "true";
@@ -145,7 +183,9 @@ const scrapeInstagram = async (account: string) => {
 
     await loadAllPostsByScrolling(page, 2);
 
-    const data = { username, profilePic, followers };
+    const { likes, comments } = await getLikesAndComments(page);
+
+    const data = { username, profilePic, followers, likes, comments };
     return data;
   } catch (error) {
     console.error(error);
