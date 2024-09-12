@@ -38,6 +38,20 @@ const goToInstagramAccount = async (page: PageWithCursor, account: string) => {
   await page.waitForSelector("section > div div > a > h2", { timeout: 10000 });
 };
 
+const getUsername = async (page: PageWithCursor) => {
+  return page.evaluate(() => {
+    const username = document.querySelector(
+      "section > div div > a > h2"
+    )?.textContent;
+
+    if (!username) {
+      throw new Error("Username not found");
+    }
+
+    return username;
+  });
+};
+
 const scrapeInstagram = async (account: string) => {
   const debugMode = process.env.IG_DEBUG_MODE === "true";
 
@@ -46,6 +60,9 @@ const scrapeInstagram = async (account: string) => {
   try {
     await loginToInstagram(page);
     await goToInstagramAccount(page, account);
+    const username = await getUsername(page);
+    const data = { username };
+    return data;
   } catch (error) {
     console.error(error);
   } finally {

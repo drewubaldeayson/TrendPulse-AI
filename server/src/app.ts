@@ -378,7 +378,8 @@ app.get(
     }
 
     try {
-      await scrapeInstagram(account);
+      const data = await scrapeInstagram(account);
+      res.json(data);
     } catch (error) {
       console.error("Error scraping Instagram:", error);
       res.status(500).json({ error: "Internal Server Error" });
