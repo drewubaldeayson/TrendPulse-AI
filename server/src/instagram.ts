@@ -14,7 +14,26 @@ interface InstagramData {
 const delay = (timeout: number) =>
   new Promise((resolve) => setTimeout(resolve, timeout));
 
+const formatNumber = (text: string | null): number => {
+  if (!text) return 0;
+
+  text = text.replace(/,/g, "").trim();
+
+  let value = parseFloat(text);
+
+  if (text.endsWith("K")) {
+    value *= 1e3;
+  } else if (text.endsWith("M")) {
+    value *= 1e6;
+  } else if (text.endsWith("B")) {
+    value *= 1e9;
+  }
+
+  return parseInt(value.toString());
+};
+
 const loginToInstagram = async (page: PageWithCursor) => {
+  console.log("Logging in to Instagram...");
   const username = process.env.IG_USERNAME || "";
   const password = process.env.IG_PASSWORD || "";
 
@@ -25,13 +44,15 @@ const loginToInstagram = async (page: PageWithCursor) => {
   await page.goto("https://www.instagram.com/accounts/login/", {
     waitUntil: "networkidle2",
   });
-  await page.type("input[name='username']", username, { delay: 100 });
-  await page.type("input[name='password']", password, { delay: 100 });
-  await page.click("button[type='submit']", { delay: 100 });
+  await page.type("input[name='username']", username, { delay: 50 });
+  await page.type("input[name='password']", password, { delay: 50 });
+  await page.click("button[type='submit']", { delay: 50 });
   await page.waitForNavigation({ waitUntil: "networkidle2" });
 };
 
 const goToInstagramAccount = async (page: PageWithCursor, account: string) => {
+  console.log(`Navigating to Instagram account: ${account}`);
+
   await page.goto(`https://www.instagram.com/${account}`, {
     waitUntil: "networkidle2",
   });
@@ -39,6 +60,7 @@ const goToInstagramAccount = async (page: PageWithCursor, account: string) => {
 };
 
 const getUsername = async (page: PageWithCursor) => {
+  console.log("Getting username...");
   return page.evaluate(() => {
     const username = document.querySelector(
       "section > div div > a > h2"
@@ -52,20 +74,57 @@ const getUsername = async (page: PageWithCursor) => {
   });
 };
 
-const scrapeInstagram = async (account: string) => {
-  const debugMode = process.env.IG_DEBUG_MODE === "true";
+const getProfilePicture = async (page: PageWithCursor) => {
+  console.log("Getting profile picture...");
+  return page.evaluate(() => {
+    const element = document.querySelector(
+      "img[alt*='profile picture']"
+    ) as HTMLImageElement;
+    const profilePicture = element?.src;
 
+    if (!profilePicture) {
+      throw new Error("Profile picture not found.");
+    }
+
+    return profilePicture;
+  });
+};
+
+const getFollowers = async (page: PageWithCursor) => {
+  console.log("Fetching followers...");
+  const followers = await page.evaluate(() => {
+    const element = document.querySelector(
+      "a[href='/instagram/followers/'] > span > span"
+    ) as HTMLElement;
+    const followers = element?.textContent;
+    if (!followers) {
+      throw new Error("Followers not found.");
+    }
+    return followers;
+  });
+  return formatNumber(followers);
+};
+
+const scrapeInstagram = async (account: string) => {
+  console.log("Connecting to browser...");
+
+  const debugMode = process.env.IG_DEBUG_MODE === "true";
   const { browser, page } = await connect({ headless: !debugMode });
 
   try {
     await loginToInstagram(page);
     await goToInstagramAccount(page, account);
+
     const username = await getUsername(page);
-    const data = { username };
+    const profilePic = await getProfilePicture(page);
+    const followers = await getFollowers(page);
+
+    const data = { username, profilePic, followers };
     return data;
   } catch (error) {
     console.error(error);
   } finally {
+    console.log("Closing browser...");
     if (!debugMode) await browser.close();
   }
 };
