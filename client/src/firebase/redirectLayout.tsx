@@ -19,7 +19,7 @@ export default function RedirectLayout({
     if (loading) return;
 
     const authPaths = ["/sign-in", "/sign-up"];
-    const protectedPaths = ["/chat", "/templates"];
+    const protectedPaths = ["/chat", "/templates", "/engagement"];
 
     const isAuthPath = authPaths.includes(pathname);
     const isHomePath = pathname === "/";
@@ -28,7 +28,7 @@ export default function RedirectLayout({
       !isAuthPath && !isHomePath && protectedPaths.includes(pathname);
 
     if (user && isAuthPath) {
-      router.push("/chat"); // Redirect logged-in users
+      router.push("/"); // Redirect logged-in users
     } else if (!user && isProtectedPath) {
       router.push("/sign-in"); // Redirect unauthenticated users
     } else {
