@@ -1,11 +1,9 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/firebase/config";
 import axios from "axios";
 import clsx from "clsx";
-import Image from "next/image";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaSpinner } from "react-icons/fa6";
