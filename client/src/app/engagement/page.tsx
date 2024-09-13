@@ -24,7 +24,7 @@ export default function Engagement() {
   const [loading, setLoading] = useState(false);
 
   const calculateEngagement = async () => {
-    if (!username) return;
+    if (loading || !username) return;
 
     try {
       const token = await user?.getIdToken(true);
