@@ -7,8 +7,9 @@ interface InstagramData {
   username: string;
   profilePic: string;
   followers: number;
-  likes: number[];
-  comments: number[];
+  averageLikes: number;
+  averageComments: number;
+  engagementRate: number;
 }
 
 const delay = (timeout: number) =>
@@ -93,10 +94,8 @@ const getProfilePicture = async (page: PageWithCursor) => {
 const getFollowers = async (page: PageWithCursor) => {
   console.log("Fetching followers...");
   const followers = await page.evaluate(() => {
-    const element = document.querySelector(
-      "a[href='/instagram/followers/'] > span > span"
-    ) as HTMLElement;
-    const followers = element?.textContent;
+    const element = document.querySelector("a > span") as HTMLElement;
+    const followers = element?.title;
     if (!followers) {
       throw new Error("Followers not found.");
     }
@@ -105,18 +104,16 @@ const getFollowers = async (page: PageWithCursor) => {
   return formatNumber(followers);
 };
 
-const loadAllPostsByScrolling = async (
-  page: PageWithCursor,
-  maxScrolls: number = 2
-) => {
+const loadAllPostsByScrolling = async (page: PageWithCursor) => {
+  const maxScrollCount = parseInt(process.env.IG_MAX_SCROLL_COUNT || "2");
   let scrollCount = 0;
   let lastHeight = 0;
 
-  while (scrollCount < maxScrolls) {
+  while (scrollCount < maxScrollCount) {
     console.log(`Scrolled down to load posts ${scrollCount + 1} times`);
 
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await delay(2000); // Wait for new content to load
+    await delay(2000);
 
     const newHeight = await page.evaluate(() => document.body.scrollHeight);
 
@@ -133,36 +130,76 @@ const getLikesAndComments = async (page: PageWithCursor) => {
   console.log("Fetching posts...");
 
   let posts = await page.$$("main > div > div:nth-child(3) > div div > a");
-  console.log(
-    `${posts.length} Posts fetched. Processing likes and comments...`
-  );
   const likes: number[] = [];
   const comments: number[] = [];
 
   for (let i = 0; i < posts.length; i++) {
-    posts = await page.$$("main > div > div:nth-child(3) > div div > a");
-    const post = posts[i];
-    await post.hover();
+    try {
+      posts = await page.$$(
+        "main > div > div:nth-child(3) > div > div > div > a"
+      );
 
-    await delay(10);
+      const post = posts[i];
 
-    const [like, comment] = await post.evaluate((post) => {
-      const elements = post.querySelectorAll("div > ul > li > span");
-      const like = elements[0]?.textContent;
-      const comment = elements[2]?.textContent;
-
-      if (!like || !comment) {
-        throw new Error("Failed to fetch likes and comments.");
+      if (!post) {
+        console.log(`Post ${i} is not found, skipping...`);
+        continue;
       }
 
-      return [like, comment];
-    });
+      await post.evaluate((post) => {
+        post.scrollIntoView();
+      });
 
-    likes.push(formatNumber(like));
-    comments.push(formatNumber(comment));
+      await delay(10);
+
+      await post.hover();
+      await delay(10);
+
+      const [like, comment] = await post.evaluate((post) => {
+        const elements = post.querySelectorAll("div > ul > li > span");
+        const like = elements[0]?.textContent;
+        const comment = elements[2]?.textContent;
+
+        if (!like || !comment) {
+          throw new Error("Failed to fetch likes and comments.");
+        }
+
+        return [like, comment];
+      });
+
+      likes.push(formatNumber(like));
+      comments.push(formatNumber(comment));
+    } catch (error) {
+      console.log(`Error processing post ${i}`);
+      continue;
+    }
   }
 
   return { likes, comments };
+};
+
+const calculateMetrics = (
+  followers: number,
+  likes: number[],
+  comments: number[]
+) => {
+  const totalLikes = likes.reduce((a, b) => a + b, 0);
+  const totalComments = comments.reduce((a, b) => a + b, 0);
+
+  const averageLikes = totalLikes / likes.length;
+  const averageComments = totalComments / comments.length;
+
+  const numberOfPosts = likes.length;
+  const engagementRate =
+    ((totalLikes + totalComments) / (followers * numberOfPosts)) * 100;
+
+  const data = {
+    averageLikes,
+    averageComments,
+    engagementRate,
+  };
+
+  return data;
 };
 
 const scrapeInstagram = async (
@@ -181,11 +218,25 @@ const scrapeInstagram = async (
     const profilePic = await getProfilePicture(page);
     const followers = await getFollowers(page);
 
-    await loadAllPostsByScrolling(page, 2);
+    await loadAllPostsByScrolling(page);
 
     const { likes, comments } = await getLikesAndComments(page);
 
-    const data = { username, profilePic, followers, likes, comments };
+    const { averageLikes, averageComments, engagementRate } = calculateMetrics(
+      followers,
+      likes,
+      comments
+    );
+
+    const data = {
+      username,
+      profilePic,
+      followers,
+      averageLikes,
+      averageComments,
+      engagementRate,
+    };
+
     return data;
   } catch (error) {
     console.error(error);
