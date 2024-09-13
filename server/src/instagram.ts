@@ -34,7 +34,6 @@ const formatNumber = (text: string | null): number => {
 };
 
 const loginToInstagram = async (page: PageWithCursor) => {
-  console.log("Logging in to Instagram...");
   const username = process.env.IG_USERNAME || "";
   const password = process.env.IG_PASSWORD || "";
 
@@ -52,8 +51,6 @@ const loginToInstagram = async (page: PageWithCursor) => {
 };
 
 const goToInstagramAccount = async (page: PageWithCursor, account: string) => {
-  console.log(`Navigating to Instagram account: ${account}`);
-
   await page.goto(`https://www.instagram.com/${account}`, {
     waitUntil: "networkidle2",
   });
@@ -61,7 +58,6 @@ const goToInstagramAccount = async (page: PageWithCursor, account: string) => {
 };
 
 const getUsername = async (page: PageWithCursor) => {
-  console.log("Getting username...");
   return page.evaluate(() => {
     const username = document.querySelector(
       "section > div div > a > h2"
@@ -76,7 +72,6 @@ const getUsername = async (page: PageWithCursor) => {
 };
 
 const getProfilePicture = async (page: PageWithCursor) => {
-  console.log("Getting profile picture...");
   return page.evaluate(() => {
     const element = document.querySelector(
       "img[alt*='profile picture']"
@@ -92,7 +87,6 @@ const getProfilePicture = async (page: PageWithCursor) => {
 };
 
 const getFollowers = async (page: PageWithCursor) => {
-  console.log("Fetching followers...");
   const followers = await page.evaluate(() => {
     const element = document.querySelector("a > span") as HTMLElement;
     const followers = element?.title;
@@ -110,8 +104,6 @@ const loadAllPostsByScrolling = async (page: PageWithCursor) => {
   let lastHeight = 0;
 
   while (scrollCount < maxScrollCount) {
-    console.log(`Scrolled down to load posts ${scrollCount + 1} times`);
-
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await delay(2000);
 
@@ -127,8 +119,6 @@ const loadAllPostsByScrolling = async (page: PageWithCursor) => {
 };
 
 const getLikesAndComments = async (page: PageWithCursor) => {
-  console.log("Fetching posts...");
-
   let posts = await page.$$("main > div > div:nth-child(3) > div div > a");
   const likes: number[] = [];
   const comments: number[] = [];
@@ -141,17 +131,13 @@ const getLikesAndComments = async (page: PageWithCursor) => {
 
       const post = posts[i];
 
-      if (!post) {
-        console.log(`Post ${i} is not found, skipping...`);
-        continue;
-      }
+      if (!post) continue;
 
       await post.evaluate((post) => {
         post.scrollIntoView();
       });
 
       await delay(10);
-
       await post.hover();
       await delay(10);
 
@@ -170,7 +156,6 @@ const getLikesAndComments = async (page: PageWithCursor) => {
       likes.push(formatNumber(like));
       comments.push(formatNumber(comment));
     } catch (error) {
-      console.log(`Error processing post ${i}`);
       continue;
     }
   }
@@ -205,47 +190,40 @@ const calculateMetrics = (
 const scrapeInstagram = async (
   account: string
 ): Promise<InstagramData | undefined> => {
-  console.log("Connecting to browser...");
-
   const debugMode = process.env.IG_DEBUG_MODE === "true";
   const { browser, page } = await connect({ headless: !debugMode });
 
-  try {
-    await loginToInstagram(page);
-    await goToInstagramAccount(page, account);
+  await loginToInstagram(page);
+  await goToInstagramAccount(page, account);
 
-    const username = await getUsername(page);
-    const profilePic = await getProfilePicture(page);
-    const followers = await getFollowers(page);
+  const username = await getUsername(page);
+  const profilePic = await getProfilePicture(page);
+  const followers = await getFollowers(page);
 
-    await loadAllPostsByScrolling(page);
+  await loadAllPostsByScrolling(page);
 
-    const { likes, comments } = await getLikesAndComments(page);
+  const { likes, comments } = await getLikesAndComments(page);
 
-    const { averageLikes, averageComments, engagementRate } = calculateMetrics(
-      followers,
-      likes,
-      comments
-    );
-
-    const data = {
-      username,
-      profilePic,
-      followers,
-      averageLikes,
-      averageComments,
-      engagementRate,
-    };
-
-    return data;
-  } catch (error) {
-    console.error(error);
-  } finally {
-    if (!debugMode) {
-      console.log("Closing browser...");
-      await browser.close();
-    }
+  if (!debugMode) {
+    await browser.close();
   }
+
+  const { averageLikes, averageComments, engagementRate } = calculateMetrics(
+    followers,
+    likes,
+    comments
+  );
+
+  const data = {
+    username,
+    profilePic,
+    followers,
+    averageLikes,
+    averageComments,
+    engagementRate,
+  };
+
+  return data;
 };
 
 export { scrapeInstagram };

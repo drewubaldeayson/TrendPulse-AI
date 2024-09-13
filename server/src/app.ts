@@ -365,11 +365,18 @@ app.post(
 );
 
 /**
- *
- *
+ * Calculate instagram metrics for a specific account.
+ * @route GET /api/instagram/:account
+ * @param {AuthenticatedRequest} req - The request object, extended with user information.
+ * @param {Response} res - The response object.
+ * @param {string} req.params.account - The account to scrape.
+ * @returns {Response} 200 - The scraped data.
+ * @returns {Response} 400 - Error message if account is missing.
+ * @returns {Response} 500 - Error message if failed to scrape data.
  */
 app.get(
   "/api/instagram/:account",
+  isAuthenticated,
   async (req: AuthenticatedRequest, res: Response) => {
     const { account } = req.params;
 
