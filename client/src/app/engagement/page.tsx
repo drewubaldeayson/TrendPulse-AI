@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/firebase/config";
 import axios from "axios";
-import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -59,8 +59,8 @@ export default function Engagement() {
 
   return (
     <main className="bg-accent">
-      <section className="container py-12 min-h-screen prose">
-        <h1>Engagement Calculator</h1>
+      <section className="container min-h-screen py-12 prose prose-lg">
+        <h2>Engagement Calculator</h2>
         <EngagementForm
           username={username}
           setUsername={setUsername}
@@ -106,7 +106,7 @@ function EngagementForm({
 
 function EngagementLoading() {
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex items-center gap-2">
       <FaSpinner className="inline animate-spin" />
       <p className="mb-00">Getting instagram data, Please wait...</p>
     </div>
@@ -115,16 +115,43 @@ function EngagementLoading() {
 
 function EngagementResult({ result }: { result: EngagementData }) {
   return (
-    <div>
-      <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center">
-        <Image
-          src={result.profilePic}
-          alt="profile pic"
-          width={64}
-          height={64}
-          className="rounded-full transform scale-105"
-        />
-      </div>
+    <div className="grid grid-cols-2 gap-4 m-16">
+      <Card className="flex flex-col items-center justify-center col-span-2 p-12">
+        <div className="flex items-center justify-center w-32 h-32 overflow-hidden rounded-full shadow-lg">
+          <Image
+            src={result.profilePic}
+            alt="profile pic"
+            width={128}
+            height={128}
+            className="transform scale-105 rounded-full"
+          />
+        </div>
+        <h4>
+          <b>@{result.username}</b>
+        </h4>
+      </Card>
+      <Card className="p-8">
+        <h3 className="mt-0">Engagement Rate</h3>
+        <h1>{result.engagementRate.toFixed(2)}%</h1>
+      </Card>
+      <Card className="p-8">
+        <h3 className="mt-0">Average Interactions per post</h3>
+        <h4>
+          <b>{new Intl.NumberFormat().format(result.followers)}</b> Followers
+        </h4>
+        <h4>
+          <b>
+            {new Intl.NumberFormat().format(Math.round(result.averageLikes))}
+          </b>{" "}
+          likes
+        </h4>
+        <h4>
+          <b>
+            {new Intl.NumberFormat().format(Math.round(result.averageComments))}
+          </b>{" "}
+          comments
+        </h4>
+      </Card>
     </div>
   );
 }
