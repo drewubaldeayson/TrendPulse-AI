@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { auth } from "@/firebase/config";
 import axios from "axios";
 import clsx from "clsx";
+import Image from "next/image";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaSpinner } from "react-icons/fa6";
@@ -87,7 +88,15 @@ export default function Engagement() {
 
         {result && !loading && (
           <div>
-            <img src={result.profilePic} alt="Profile picture" />
+            <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center">
+              <Image
+                src={result.profilePic}
+                alt="profile pic"
+                width={64}
+                height={64}
+                className="rounded-full transform scale-105"
+              />
+            </div>
             <pre>{JSON.stringify(result, null, 2)}</pre>
           </div>
         )}
