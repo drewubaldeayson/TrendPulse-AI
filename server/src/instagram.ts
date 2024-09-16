@@ -1,4 +1,5 @@
 import { connect, PageWithCursor } from "puppeteer-real-browser";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -44,6 +45,7 @@ const loginToInstagram = async (page: PageWithCursor) => {
   await page.goto("https://www.instagram.com/accounts/login/", {
     waitUntil: "networkidle2",
   });
+
   await page.type("input[name='username']", username, { delay: 50 });
   await page.type("input[name='password']", password, { delay: 50 });
   await page.click("button[type='submit']", { delay: 50 });
@@ -72,18 +74,15 @@ const getUsername = async (page: PageWithCursor) => {
 };
 
 const getProfilePicture = async (page: PageWithCursor) => {
-  return page.evaluate(() => {
-    const element = document.querySelector(
-      "img[alt*='profile picture']"
-    ) as HTMLImageElement;
-    const profilePicture = element?.src;
+  const element = await page.$("img[alt*='profile picture']");
 
-    if (!profilePicture) {
-      throw new Error("Profile picture not found.");
-    }
+  if (!element) {
+    throw new Error("Profile picture element not found.");
+  }
 
-    return profilePicture;
-  });
+  const profilePictureBase64 = await element.screenshot({ encoding: "base64" });
+
+  return `data:image/png;base64,${profilePictureBase64}`;
 };
 
 const getFollowers = async (page: PageWithCursor) => {
@@ -191,7 +190,10 @@ const scrapeInstagram = async (
   account: string
 ): Promise<InstagramData | undefined> => {
   const debugMode = process.env.IG_DEBUG_MODE === "true";
-  const { browser, page } = await connect({ headless: !debugMode });
+  const { browser, page } = await connect({
+    headless: !debugMode,
+    plugins: [StealthPlugin()],
+  });
 
   await loginToInstagram(page);
   await goToInstagramAccount(page, account);
