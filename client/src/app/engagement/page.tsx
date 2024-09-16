@@ -57,6 +57,34 @@ export default function Engagement() {
     }
   };
 
+  return (
+    <main className="bg-accent">
+      <section className="container py-12 min-h-screen prose">
+        <h1>Engagement Calculator</h1>
+        <EngagementForm
+          username={username}
+          setUsername={setUsername}
+          calculateEngagement={calculateEngagement}
+        />
+
+        {loading && <EngagementLoading />}
+
+        {result && !loading && <EngagementResult result={result} />}
+      </section>
+    </main>
+  );
+}
+interface EngagementFormProps {
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  calculateEngagement: () => void;
+}
+
+function EngagementForm({
+  username,
+  setUsername,
+  calculateEngagement,
+}: EngagementFormProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       calculateEngagement();
@@ -64,43 +92,39 @@ export default function Engagement() {
   };
 
   return (
-    <main className="bg-accent">
-      <section className="container py-12 min-h-screen prose">
-        <h1>Engagement Calculator</h1>
-        <div className="flex items-center max-w-md gap-2">
-          <Input
-            value={username}
-            onChange={(e) => setUsername(e.target.value.trim())}
-            placeholder="Enter Instagram username"
-            onKeyDown={handleKeyDown}
-          />
-          <Button onClick={calculateEngagement}>Calculate</Button>
-        </div>
+    <div className="flex items-center max-w-md gap-2">
+      <Input
+        value={username}
+        onChange={(e) => setUsername(e.target.value.trim())}
+        placeholder="Enter Instagram username"
+        onKeyDown={handleKeyDown}
+      />
+      <Button onClick={calculateEngagement}>Calculate</Button>
+    </div>
+  );
+}
 
-        <div
-          className={clsx("flex gap-2 items-center", {
-            "opacity-0": !loading,
-          })}
-        >
-          <FaSpinner className="inline animate-spin" />
-          <p className="mb-00">Getting instagram data, Please wait...</p>
-        </div>
+function EngagementLoading() {
+  return (
+    <div className="flex gap-2 items-center">
+      <FaSpinner className="inline animate-spin" />
+      <p className="mb-00">Getting instagram data, Please wait...</p>
+    </div>
+  );
+}
 
-        {result && !loading && (
-          <div>
-            <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center">
-              <Image
-                src={result.profilePic}
-                alt="profile pic"
-                width={64}
-                height={64}
-                className="rounded-full transform scale-105"
-              />
-            </div>
-            <pre>{JSON.stringify(result, null, 2)}</pre>
-          </div>
-        )}
-      </section>
-    </main>
+function EngagementResult({ result }: { result: EngagementData }) {
+  return (
+    <div>
+      <div className="w-16 h-16 rounded-full overflow-hidden flex items-center justify-center">
+        <Image
+          src={result.profilePic}
+          alt="profile pic"
+          width={64}
+          height={64}
+          className="rounded-full transform scale-105"
+        />
+      </div>
+    </div>
   );
 }
