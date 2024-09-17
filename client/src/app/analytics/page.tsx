@@ -23,7 +23,7 @@ interface TopEngagementData {
   data: { username: string; engagementRate: string }[];
 }
 
-export default function Engagement() {
+export default function Analytics() {
   const [user] = useAuthState(auth);
   const [username, setUsername] = useState("");
   const [result, setResult] = useState<EngagementData | null>(null);
