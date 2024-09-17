@@ -3,7 +3,7 @@ import { admin, firestore } from "./firebase";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import { getChatGPTResponse } from "./chatgpt";
-import { scrapeInstagram } from "./instagram";
+import { scrapeInstagram, scrapeTopInstagram } from "./instagram";
 
 const app = express();
 
@@ -389,6 +389,26 @@ app.get(
       res.json(data);
     } catch (error) {
       console.error("Error scraping Instagram:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+
+/**
+ * Scrape top Instagram handles.
+ * @route GET /api/topInstagram
+ * @returns {Response} 200 - List of top Instagram handles.
+ * @returns {Response} 500 - Error message if failed to scrape data.
+ */
+app.get(
+  "/api/topInstagram",
+  isAuthenticated,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const topInstagramData = await scrapeTopInstagram();
+      res.json(topInstagramData);
+    } catch (error) {
+      console.error("Error scraping top Instagram handles:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   }

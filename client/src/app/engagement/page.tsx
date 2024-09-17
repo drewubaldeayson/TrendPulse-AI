@@ -92,7 +92,7 @@ function EngagementForm({
   };
 
   return (
-    <div className="flex items-center max-w-md gap-2">
+    <div className="flex items-center max-w-2xl gap-2">
       <Input
         value={username}
         onChange={(e) => setUsername(e.target.value.trim())}
@@ -115,8 +115,8 @@ function EngagementLoading() {
 
 function EngagementResult({ result }: { result: EngagementData }) {
   return (
-    <div className="grid grid-cols-2 gap-4 m-16">
-      <Card className="flex flex-col items-center justify-center col-span-2 p-12">
+    <div className="grid max-w-2xl grid-cols-1 gap-4 pt-8 md:grid-cols-2">
+      <Card className="flex flex-col items-center justify-center p-12 md:col-span-2">
         <div className="flex items-center justify-center w-32 h-32 overflow-hidden rounded-full shadow-lg">
           <Image
             src={result.profilePic}

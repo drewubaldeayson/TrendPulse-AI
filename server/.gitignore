@@ -8,3 +8,6 @@
 
 # dist files
 /dist
+
+# src json files
+/src/*.json

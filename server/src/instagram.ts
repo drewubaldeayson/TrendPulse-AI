@@ -1,8 +1,91 @@
 import { connect, PageWithCursor } from "puppeteer-real-browser";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 import dotenv from "dotenv";
+import path from "path";
+import fs from "fs";
 
 dotenv.config();
+
+const TOP_INSTAGRAM_DATA_FILE = path.join(__dirname, "topInstagramData.json");
+
+interface TopInstagramData {
+  lastScraped: string | null;
+  data: { username: string; engagementRate: string }[];
+}
+
+const shouldScrape = (lastScraped: TopInstagramData["lastScraped"]) => {
+  if (!lastScraped) {
+    return true;
+  }
+
+  const lastDate = new Date(lastScraped);
+  const currentDate = new Date();
+  const isSameMonth = lastDate.getMonth() === currentDate.getMonth();
+
+  return !isSameMonth;
+};
+
+const loadTopInstagramData = async () => {
+  if (!fs.existsSync(TOP_INSTAGRAM_DATA_FILE)) {
+    return { lastScraped: null, data: [] } as TopInstagramData;
+  }
+  return JSON.parse(
+    fs.readFileSync(TOP_INSTAGRAM_DATA_FILE, "utf8")
+  ) as TopInstagramData;
+};
+
+const saveTopInstagramData = async (data: TopInstagramData) => {
+  fs.writeFileSync(TOP_INSTAGRAM_DATA_FILE, JSON.stringify(data, null, 2));
+};
+
+const scrapeHandles = async (page: PageWithCursor) => {
+  const handles = await page.evaluate(() => {
+    const elements = Array.from(document.querySelectorAll("div.handle")).map(
+      (handle) => ({
+        username: handle.querySelector(".username .value")?.textContent,
+        engagementRate: handle.querySelector(".er")?.textContent,
+      })
+    );
+    return elements;
+  });
+  return handles;
+};
+
+const scrapePage = async (url: string) => {
+  const { browser, page } = await connect({
+    headless: process.env.IG_DEBUG_MODE !== "true",
+    plugins: [StealthPlugin()],
+  });
+
+  try {
+    await page.goto(url, { waitUntil: "networkidle2" });
+    await delay(1000);
+    const data = await scrapeHandles(page);
+    await browser.close();
+    return data;
+  } catch (error) {
+    await browser.close();
+    throw new Error("Scraping failed");
+  }
+};
+
+const scrapeTopInstagram = async (): Promise<TopInstagramData> => {
+  const topInstagramUrl = "https://phlanx.com/engagement-calculator";
+  const scrapeData = await loadTopInstagramData();
+
+  if (shouldScrape(scrapeData.lastScraped)) {
+    const newData = await scrapePage(topInstagramUrl);
+    const updatedData = {
+      lastScraped: new Date().toISOString(),
+      data: newData,
+    } as TopInstagramData;
+
+    saveTopInstagramData(updatedData);
+    return updatedData;
+  }
+
+  return scrapeData;
+};
 
 interface InstagramData {
   username: string;
@@ -228,4 +311,4 @@ const scrapeInstagram = async (
   return data;
 };
 
-export { scrapeInstagram };
+export { scrapeInstagram, scrapeTopInstagram };
