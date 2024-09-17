@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/firebase/config";
 import axios from "axios";
-import mockData from "./mockData.json";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -38,18 +37,14 @@ export default function Engagement() {
       const token = await user?.getIdToken(true);
       setLoading(true);
 
-      // const response = await axios.get(
-      //   `http://localhost:5000/api/instagram/${username}`,
-      //   {
-      //     headers: {
-      //       Authorization: token,
-      //     },
-      //   }
-      // );
-
-      const response = {
-        data: mockData,
-      };
+      const response = await axios.get(
+        `http://localhost:5000/api/instagram/${username}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       setResult(response.data);
     } catch (error) {
@@ -177,7 +172,7 @@ function EngagementResult({ result }: { result: EngagementData }) {
 
 function TopEngagement({ topResult }: { topResult: TopEngagementData }) {
   return (
-    <Card className="px-8 h-[85vh] box-border overflow-y-scroll">
+    <Card className="px-8 h-[80vh] box-border overflow-y-scroll">
       <h4>Top Instagram Accounts This Month</h4>
       <table>
         {topResult.data.length > 0 && (

@@ -133,6 +133,18 @@ const loginToInstagram = async (page: PageWithCursor) => {
   await page.type("input[name='password']", password, { delay: 50 });
   await page.click("button[type='submit']", { delay: 50 });
   await page.waitForNavigation({ waitUntil: "networkidle2" });
+
+  let dismissButton;
+  do {
+    dismissButton = await page.$('div[aria-label="Dismiss"]');
+    if (dismissButton) {
+      await Promise.all([
+        delay(500),
+        dismissButton.click(),
+        page.waitForNavigation({ waitUntil: "networkidle2" }),
+      ]);
+    }
+  } while (dismissButton);
 };
 
 const goToInstagramAccount = async (page: PageWithCursor, account: string) => {
