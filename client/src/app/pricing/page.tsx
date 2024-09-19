@@ -3,79 +3,79 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import clsx from "clsx";
 
+const monthlyPlans = [
+  {
+    title: "BASIC",
+    price: "$29/mo",
+    billingInfo: null,
+    features: [
+      "1 dedicated user account",
+      "Unlimited access to Phlanx Complete",
+      "Complete suite of marketing tools",
+    ],
+    buttonLabel: "Start Free Trial",
+  },
+  {
+    title: "PREMIUM",
+    price: "$50/mo",
+    billingInfo: null,
+    features: [
+      "3 dedicated user accounts",
+      "Unlimited access to Phlanx Complete",
+      "Complete suite of marketing tools",
+    ],
+    buttonLabel: "Start Free Trial",
+  },
+  {
+    title: "BUSINESS",
+    price: "$80/mo",
+    billingInfo: null,
+    features: [
+      "8 dedicated user accounts",
+      "Unlimited access to Phlanx Complete",
+      "Complete suite of marketing tools",
+    ],
+    buttonLabel: "Start Free Trial",
+  },
+];
+
+const yearlyPlans = [
+  {
+    title: "BASIC",
+    price: "$28.17/mo",
+    billingInfo: "Billed annually for $338 (less $10)",
+    features: [
+      "1 dedicated user account",
+      "Unlimited access to Phlanx Complete",
+      "Complete suite of marketing tools",
+    ],
+    buttonLabel: "Start Free Trial",
+  },
+  {
+    title: "PREMIUM",
+    price: "$49.17/mo",
+    billingInfo: "Billed annually for $590 (less $10)",
+    features: [
+      "3 dedicated user accounts",
+      "Unlimited access to Phlanx Complete",
+      "Complete suite of marketing tools",
+    ],
+    buttonLabel: "Start Free Trial",
+  },
+  {
+    title: "BUSINESS",
+    price: "$79.17/mo",
+    billingInfo: "Billed annually for $950 (less $10)",
+    features: [
+      "8 dedicated user accounts",
+      "Unlimited access to Phlanx Complete",
+      "Complete suite of marketing tools",
+    ],
+    buttonLabel: "Start Free Trial",
+  },
+];
+
 export default function Pricing() {
-  const monthlyPlans = [
-    {
-      title: "BASIC",
-      price: "$29/mo",
-      billingInfo: null,
-      features: [
-        "1 dedicated user account",
-        "Unlimited access to Phlanx Complete",
-        "Complete suite of marketing tools",
-      ],
-      buttonLabel: "Start Free Trial",
-    },
-    {
-      title: "PREMIUM",
-      price: "$50/mo",
-      billingInfo: null,
-      features: [
-        "3 dedicated user accounts",
-        "Unlimited access to Phlanx Complete",
-        "Complete suite of marketing tools",
-      ],
-      buttonLabel: "Start Free Trial",
-    },
-    {
-      title: "BUSINESS",
-      price: "$80/mo",
-      billingInfo: null,
-      features: [
-        "8 dedicated user accounts",
-        "Unlimited access to Phlanx Complete",
-        "Complete suite of marketing tools",
-      ],
-      buttonLabel: "Start Free Trial",
-    },
-  ];
-
-  const yearlyPlans = [
-    {
-      title: "BASIC",
-      price: "$28.17/mo",
-      billingInfo: "Billed annually for $338 (less $10)",
-      features: [
-        "1 dedicated user account",
-        "Unlimited access to Phlanx Complete",
-        "Complete suite of marketing tools",
-      ],
-      buttonLabel: "Start Free Trial",
-    },
-    {
-      title: "PREMIUM",
-      price: "$49.17/mo",
-      billingInfo: "Billed annually for $590 (less $10)",
-      features: [
-        "3 dedicated user accounts",
-        "Unlimited access to Phlanx Complete",
-        "Complete suite of marketing tools",
-      ],
-      buttonLabel: "Start Free Trial",
-    },
-    {
-      title: "BUSINESS",
-      price: "$79.17/mo",
-      billingInfo: "Billed annually for $950 (less $10)",
-      features: [
-        "8 dedicated user accounts",
-        "Unlimited access to Phlanx Complete",
-        "Complete suite of marketing tools",
-      ],
-      buttonLabel: "Start Free Trial",
-    },
-  ];
-
   return (
     <main className="bg-accent relative">
       <div className="absolute inset-0 transform skew-y-6 -translate-y-3/4 md:-translate-y-1/2 bg-primary"></div>
@@ -123,7 +123,7 @@ function PlanCard({
   className,
 }: PlanCardProps) {
   return (
-    <Card className={`prose prose-sm py-8 ${className}`}>
+    <Card className={`prose py-8 ${className}`}>
       <CardHeader className="flex flex-col items-center">
         <h1>{title}</h1>
         <h2>{price}</h2>
@@ -132,7 +132,7 @@ function PlanCard({
         </i>
         <Button>{buttonLabel}</Button>
       </CardHeader>
-      <CardContent>
+      <CardContent className="prose-sm">
         {features.map((feature, index) => (
           <p key={index}>✔️ {feature}</p>
         ))}
