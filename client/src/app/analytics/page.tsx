@@ -30,13 +30,15 @@ export default function Analytics() {
   const [topResult, setTopResult] = useState<TopEngagementData | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Fetches engagement data for the given Instagram user
   const calculateEngagement = async () => {
-    if (loading || !username) return;
+    if (loading || !username) return; // Avoid unnecessary requests
 
     try {
-      const token = await user?.getIdToken(true);
-      setLoading(true);
+      const token = await user?.getIdToken(true); // Get user token
+      setLoading(true); // Start loading
 
+      // API call to fetch engagement data
       const response = await axios.get(
         `http://localhost:5000/api/instagram/${username}`,
         {
@@ -45,23 +47,36 @@ export default function Analytics() {
           },
         }
       );
-
+      // Store result
       setResult(response.data);
     } catch (error) {
       console.error("Error fetching engagement data:", error);
     } finally {
+      // Stop loading
       setLoading(false);
     }
   };
 
+  // Fetches top engagement data
   const getTopEngagement = async () => {
-    const token = await user?.getIdToken(true);
-    const response = await axios.get(`http://localhost:5000/api/topInstagram`, {
-      headers: {
-        Authorization: token,
-      },
-    });
-    setTopResult(response.data);
+    try {
+      const token = await user?.getIdToken(true); // Get user token
+
+      // API call to fetch top Instagram data
+      const response = await axios.get(
+        `http://localhost:5000/api/topInstagram`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      // Store top result
+      setTopResult(response.data);
+    } catch (error) {
+      console.error("Error fetching top engagement data:", error);
+    }
   };
 
   useEffect(() => {
