@@ -77,10 +77,10 @@ const yearlyPlans = [
 
 export default function Pricing() {
   return (
-    <main className="bg-accent relative">
+    <main className="relative bg-accent">
       <div className="absolute inset-0 transform skew-y-6 -translate-y-3/4 md:-translate-y-1/2 bg-primary"></div>
-      <div className="container min-h-screen relative py-16">
-        <div className="prose py-16">
+      <div className="container relative min-h-screen py-16">
+        <div className="py-16 prose">
           <h1 className="text-center text-balance text-primary-foreground">
             Select your plan to start your free trial.
           </h1>
@@ -97,7 +97,7 @@ export default function Pricing() {
             <PlanGrid plans={yearlyPlans} />
           </TabsContent>
         </Tabs>
-        <div className="prose prose-sm flex justify-end opacity-75">
+        <div className="flex justify-end prose-sm prose opacity-75">
           <p>*All prices in USD</p>
         </div>
       </div>
@@ -147,7 +147,7 @@ interface PlanGridProps {
 
 function PlanGrid({ plans }: PlanGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
       {plans.map((plan, index) => (
         <PlanCard key={index} {...plan} />
       ))}
