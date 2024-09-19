@@ -91,18 +91,10 @@ export default function Pricing() {
             <TabsTrigger value="yearly">Yearly</TabsTrigger>
           </TabsList>
           <TabsContent value="monthly" className="my-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {monthlyPlans.map((plan, index) => (
-                <PlanCard key={index} {...plan} />
-              ))}
-            </div>
+            <PlanGrid plans={monthlyPlans} />
           </TabsContent>
           <TabsContent value="yearly" className="my-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {yearlyPlans.map((plan, index) => (
-                <PlanCard key={index} {...plan} />
-              ))}
-            </div>
+            <PlanGrid plans={yearlyPlans} />
           </TabsContent>
         </Tabs>
         <div className="prose prose-sm flex justify-end opacity-75">
@@ -146,5 +138,19 @@ function PlanCard({
         ))}
       </CardContent>
     </Card>
+  );
+}
+
+interface PlanGridProps {
+  plans: PlanCardProps[];
+}
+
+function PlanGrid({ plans }: PlanGridProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {plans.map((plan, index) => (
+        <PlanCard key={index} {...plan} />
+      ))}
+    </div>
   );
 }
