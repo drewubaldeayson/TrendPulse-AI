@@ -77,26 +77,27 @@ export default function Pricing() {
   ];
 
   return (
-    <main className="bg-accent">
-      <div className="container min-h-screen py-32">
-        <div className="prose">
-          <h1 className="text-center text-balance">
+    <main className="bg-accent relative">
+      <div className="absolute inset-0 transform skew-y-6 -translate-y-3/4 md:-translate-y-1/2 bg-primary"></div>
+      <div className="container min-h-screen relative py-16">
+        <div className="prose py-16">
+          <h1 className="text-center text-balance text-primary-foreground">
             Select your plan to start your free trial.
           </h1>
         </div>
-        <Tabs defaultValue="monthly">
-          <TabsList>
+        <Tabs defaultValue="monthly" className="flex flex-col">
+          <TabsList className="self-center">
             <TabsTrigger value="monthly">Monthly</TabsTrigger>
             <TabsTrigger value="yearly">Yearly</TabsTrigger>
           </TabsList>
-          <TabsContent value="monthly">
+          <TabsContent value="monthly" className="my-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {monthlyPlans.map((plan, index) => (
                 <PlanCard key={index} {...plan} />
               ))}
             </div>
           </TabsContent>
-          <TabsContent value="yearly">
+          <TabsContent value="yearly" className="my-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {yearlyPlans.map((plan, index) => (
                 <PlanCard key={index} {...plan} />
@@ -104,6 +105,9 @@ export default function Pricing() {
             </div>
           </TabsContent>
         </Tabs>
+        <div className="prose prose-sm flex justify-end opacity-75">
+          <p>*All prices in USD</p>
+        </div>
       </div>
     </main>
   );
@@ -127,7 +131,7 @@ function PlanCard({
   className,
 }: PlanCardProps) {
   return (
-    <Card className={`prose prose-sm ${className}`}>
+    <Card className={`prose prose-sm py-8 ${className}`}>
       <CardHeader className="flex flex-col items-center">
         <h1>{title}</h1>
         <h2>{price}</h2>
