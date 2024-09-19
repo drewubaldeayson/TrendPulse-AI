@@ -1,13 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import clsx from "clsx";
 
 export default function Pricing() {
   const monthlyPlans = [
     {
       title: "BASIC",
-      price: "$49/mo",
-      billingInfo: "Billed annually",
+      price: "$29/mo",
+      billingInfo: null,
       features: [
         "1 dedicated user account",
         "Unlimited access to Phlanx Complete",
@@ -17,8 +18,8 @@ export default function Pricing() {
     },
     {
       title: "PREMIUM",
-      price: "$49/mo",
-      billingInfo: "Billed annually",
+      price: "$50/mo",
+      billingInfo: null,
       features: [
         "3 dedicated user accounts",
         "Unlimited access to Phlanx Complete",
@@ -28,8 +29,8 @@ export default function Pricing() {
     },
     {
       title: "BUSINESS",
-      price: "$100/mo",
-      billingInfo: "Billed annually",
+      price: "$80/mo",
+      billingInfo: null,
       features: [
         "8 dedicated user accounts",
         "Unlimited access to Phlanx Complete",
@@ -42,8 +43,8 @@ export default function Pricing() {
   const yearlyPlans = [
     {
       title: "BASIC",
-      price: "$39/mo",
-      billingInfo: "Billed annually for $468",
+      price: "$28.17/mo",
+      billingInfo: "Billed annually for $338 (less $10)",
       features: [
         "1 dedicated user account",
         "Unlimited access to Phlanx Complete",
@@ -53,8 +54,8 @@ export default function Pricing() {
     },
     {
       title: "PREMIUM",
-      price: "$60/mo",
-      billingInfo: "Billed annually for $720",
+      price: "$49.17/mo",
+      billingInfo: "Billed annually for $590 (less $10)",
       features: [
         "3 dedicated user accounts",
         "Unlimited access to Phlanx Complete",
@@ -64,8 +65,8 @@ export default function Pricing() {
     },
     {
       title: "BUSINESS",
-      price: "$90/mo",
-      billingInfo: "Billed annually for $1080",
+      price: "$79.17/mo",
+      billingInfo: "Billed annually for $950 (less $10)",
       features: [
         "8 dedicated user accounts",
         "Unlimited access to Phlanx Complete",
@@ -111,7 +112,7 @@ export default function Pricing() {
 interface PlanCardProps {
   title: string;
   price: string;
-  billingInfo: string;
+  billingInfo: string | null;
   features: string[];
   buttonLabel: string;
   className?: string;
@@ -130,7 +131,9 @@ function PlanCard({
       <CardHeader className="flex flex-col items-center">
         <h1>{title}</h1>
         <h2>{price}</h2>
-        <i>{billingInfo}</i>
+        <i className={clsx({ "opacity-0": !billingInfo })}>
+          {billingInfo ? billingInfo : "N/A"}
+        </i>
         <Button>{buttonLabel}</Button>
       </CardHeader>
       <CardContent>
