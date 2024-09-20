@@ -19,7 +19,7 @@ export default function RedirectLayout({
     if (loading) return;
 
     const authPaths = ["/sign-in", "/sign-up"];
-    const protectedPaths = ["/chat", "/templates", "/engagement"];
+    const protectedPaths = ["/chat", "/templates", "/analytics"];
 
     const isAuthPath = authPaths.includes(pathname);
     const isHomePath = pathname === "/";

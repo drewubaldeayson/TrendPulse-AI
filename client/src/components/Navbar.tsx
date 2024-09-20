@@ -10,24 +10,45 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { FaCaretDown } from "react-icons/fa6";
+import { FaBars, FaCaretDown } from "react-icons/fa6";
 import { User } from "firebase/auth";
 import Link from "next/link";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet";
 
 export default function Navbar() {
   const [user] = useAuthState(auth);
+  const unauthorizedLinks = [
+    { href: "/pricing", label: "Pricing" },
+    { href: "/faq", label: "FAQ" },
+    { href: "/sign-in", label: "Sign In" },
+  ];
+
+  const authorizedLinks = [
+    { href: "/pricing", label: "Pricing" },
+    { href: "/faq", label: "FAQ" },
+    { href: "/chat", label: "Chat" },
+    { href: "/templates", label: "Templates" },
+    { href: "/analytics", label: "Analytics" },
+  ];
+
+  if (!user) {
+    return (
+      <nav className="sticky top-0 z-50 flex items-center justify-between h-16 px-2 border bg-primary-foreground">
+        <Logo />
+        <div className="flex flex-row-reverse gap-2 md:flex-row">
+          <ResponsiveMenu links={unauthorizedLinks} />
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between h-16 px-2 border bg-primary-foreground">
       <Logo />
-      {user ? <AuthorizedMenu user={user} /> : <UnauthorizedMenu />}
+      <div className="flex flex-row-reverse gap-2 md:flex-row">
+        <ResponsiveMenu links={authorizedLinks} />
+        <Dropdown user={user} />
+      </div>
     </nav>
   );
 }
@@ -36,47 +57,56 @@ function Logo() {
   return (
     <Link href="/">
       <Button variant="ghost">
-        <span className="font-black md:text-xl">TrendPulse AI</span>
+        <span className="text-xl font-black">TrendPulse AI</span>
       </Button>
     </Link>
   );
 }
 
-function UnauthorizedMenu() {
+interface ResponsiveMenuProps {
+  links: { href: string; label: string }[];
+}
+
+function ResponsiveMenu({ links }: ResponsiveMenuProps) {
   return (
-    <div className="flex gap-4 pr-2">
-      <Link href="/sign-in">
-        <Button variant="outline">Login</Button>
-      </Link>
+    <div className="flex items-center">
+      <div className="hidden md:flex">
+        {links.map((link, idx) => (
+          <Link key={idx} href={link.href}>
+            <Button variant="ghost">{link.label}</Button>
+          </Link>
+        ))}
+      </div>
+
+      <div className="md:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline">
+              <FaBars />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <div className="my-4 prose">
+              <h4>Navigation</h4>
+            </div>
+            <div className="flex flex-col">
+              {links.map((link, index) => (
+                <SheetClose asChild key={index}>
+                  <Link key={index} href={link.href}>
+                    <Button variant="link" className="text-base">
+                      {link.label}
+                    </Button>
+                  </Link>
+                </SheetClose>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
     </div>
   );
 }
 
-function AuthorizedMenu({ user }: { user: User }) {
-  return (
-    <div className="flex pr-2 md:gap-4">
-      <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="/chat" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Chat
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-          <NavigationMenuItem>
-            <Link href="/templates" legacyBehavior passHref>
-              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Templates
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu>
-      <Dropdown user={user} />
-    </div>
-  );
-}
 function Dropdown({ user }: { user: User }) {
   return (
     <DropdownMenu>
