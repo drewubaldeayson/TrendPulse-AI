@@ -119,7 +119,6 @@ function TabsSection() {
   );
 }
 
-// Footer Section
 function Footer() {
   return (
     <div className="flex justify-end prose-sm prose opacity-75">
