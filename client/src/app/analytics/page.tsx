@@ -85,7 +85,7 @@ export default function Analytics() {
 
   return (
     <main className="bg-accent">
-      <section className="container flex flex-col min-h-screen py-12 prose prose-lg lg:flex-row gap-4">
+      <section className="container flex flex-col min-h-screen gap-4 py-12 prose prose-lg lg:flex-row">
         <div className="lg:w-8/12">
           <h2>Engagement Calculator</h2>
           <EngagementForm
