@@ -127,9 +127,7 @@ function PlanCard({
       <CardHeader className="flex flex-col items-center">
         <h1>{title}</h1>
         <h2>{price}</h2>
-        <i className={clsx({ "opacity-0": !billingInfo })}>
-          {billingInfo ? billingInfo : "N/A"}
-        </i>
+        <i className={billingInfo ? "" : "opacity-0"}>{billingInfo || "N/A"}</i>
         <Button>{buttonLabel}</Button>
       </CardHeader>
       <CardContent className="prose-sm">
