@@ -28,11 +28,14 @@ export default function RedirectLayout({
       !isAuthPath && !isHomePath && protectedPaths.includes(pathname);
 
     if (user && isAuthPath) {
-      router.push("/"); // Redirect logged-in users
+      // Redirect logged-in users
+      router.push("/");
     } else if (!user && isProtectedPath) {
-      router.push("/sign-in"); // Redirect unauthenticated users
+      // Redirect unauthenticated users
+      router.push("/sign-in");
     } else {
-      setRedirecting(false); // No redirection
+      // No redirection
+      setRedirecting(false);
     }
   }, [loading, user, pathname, router]);
 
