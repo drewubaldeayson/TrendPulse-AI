@@ -2,7 +2,7 @@
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { usePathname, useRouter } from "next/navigation";
-import { auth } from "@/firebase/config";
+import { auth } from "@/lib/config";
 import { useEffect, useState } from "react";
 
 export default function RedirectLayout({
