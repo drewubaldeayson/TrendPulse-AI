@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { auth } from "@/firebase/config";
+import { auth } from "@/lib/firebaseConfig";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";

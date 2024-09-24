@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/firebase/config";
+import { auth } from "@/lib/firebaseConfig";
 import LogoutButton from "./LogoutButton";
 import { Button } from "./ui/button";
 import { useAuthState } from "react-firebase-hooks/auth";

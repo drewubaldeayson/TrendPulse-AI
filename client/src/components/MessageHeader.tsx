@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/firebase/config";
+import { auth } from "@/lib/firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import templates from "@/lib/templates.json";
 import { Category } from "@/app/templates/page";

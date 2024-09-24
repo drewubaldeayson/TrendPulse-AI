@@ -5,7 +5,7 @@ import MessageBox from "@/components/MessageBox";
 import MessageList, { Message } from "@/components/MessageList";
 import WrapperChat from "@/components/WrapperChat";
 import WrapperSidebar from "@/components/WrapperSidebar";
-import { auth } from "@/firebase/config";
+import { auth } from "@/lib/firebaseConfig";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";

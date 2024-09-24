@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/firebase/config";
+import { auth } from "@/lib/firebaseConfig";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import Link from "next/link";
 import { z } from "zod";
