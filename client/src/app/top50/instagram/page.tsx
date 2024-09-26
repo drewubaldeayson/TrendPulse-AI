@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
-import { Menu } from "lucide-react";
 import Link from "next/link";
 
 export default function Top50Instagram() {

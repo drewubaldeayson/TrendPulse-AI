@@ -10,7 +10,11 @@ const TOP_INSTAGRAM_DATA_FILE = path.join(__dirname, "topInstagramData.json");
 
 interface TopInstagramData {
   lastScraped: string | null;
-  data: { username: string; engagementRate: string }[];
+  data: {
+    username: string;
+    followers: string;
+    engagementRate: string;
+  }[];
 }
 
 const shouldScrape = (lastScraped: TopInstagramData["lastScraped"]) => {
@@ -40,11 +44,29 @@ const saveTopInstagramData = async (data: TopInstagramData) => {
 
 const scrapeHandles = async (page: PageWithCursor) => {
   const handles = await page.evaluate(() => {
-    const elements = Array.from(document.querySelectorAll("div.handle")).map(
-      (handle) => ({
-        username: handle.querySelector(".username .value")?.textContent,
-        engagementRate: handle.querySelector(".er")?.textContent,
-      })
+    const elements = [...document.querySelectorAll("div.handle")].map(
+      (handle) => {
+        const engagementRate = handle.querySelector(
+          "div.misc > div:nth-child(3) > div.value"
+        )?.textContent;
+
+        const followers = handle.querySelector(
+          "div.misc > div:nth-child(1) > div.value"
+        )?.textContent;
+
+        const nameLink = handle.querySelector(
+          "div.name > a"
+        ) as HTMLAnchorElement;
+        const regex = /instagram\.com\/(.+)/;
+        const hrefMatch = nameLink?.href.match(regex);
+        const username = hrefMatch ? hrefMatch[1] : null;
+
+        return {
+          username,
+          followers,
+          engagementRate,
+        };
+      }
     );
     return elements;
   });
@@ -70,7 +92,8 @@ const scrapePage = async (url: string) => {
 };
 
 const scrapeTopInstagram = async (): Promise<TopInstagramData> => {
-  const topInstagramUrl = "https://phlanx.com/engagement-calculator";
+  const topInstagramUrl =
+    "https://phlanx.com/top-lists/instagram/top-50-followed";
   const scrapeData = await loadTopInstagramData();
 
   if (shouldScrape(scrapeData.lastScraped)) {

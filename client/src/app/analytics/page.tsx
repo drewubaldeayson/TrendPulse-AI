@@ -20,7 +20,11 @@ interface EngagementData {
 
 interface TopEngagementData {
   lastScraped: string | null;
-  data: { username: string; engagementRate: string }[];
+  data: {
+    username: string;
+    followers: string;
+    engagementRate: string;
+  }[];
 }
 
 export default function Analytics() {
@@ -197,6 +201,7 @@ function TopEngagement({ topResult }: { topResult: TopEngagementData }) {
                 <td>
                   <b>@{result.username}</b>
                 </td>
+                <td>{result.followers}</td>
                 <td>{result.engagementRate}</td>
               </tr>
             ))}
