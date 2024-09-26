@@ -3,7 +3,8 @@ import { admin, firestore } from "./firebase";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import { getChatGPTResponse } from "./chatgpt";
-import { scrapeInstagram, scrapeTopInstagram } from "./instagram";
+import { scrapeInstagram } from "./instagram";
+import { scrapeTop50 } from "./top50";
 
 const app = express();
 
@@ -401,11 +402,12 @@ app.get(
  * @returns {Response} 500 - Error message if failed to scrape data.
  */
 app.get(
-  "/api/topInstagram",
+  "/api/top50/:platform",
   isAuthenticated,
   async (req: AuthenticatedRequest, res: Response) => {
+    const { platform } = req.params;
     try {
-      const topInstagramData = await scrapeTopInstagram();
+      const topInstagramData = await scrapeTop50(platform);
       res.json(topInstagramData);
     } catch (error) {
       console.error("Error scraping top Instagram handles:", error);

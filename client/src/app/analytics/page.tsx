@@ -8,6 +8,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaSpinner } from "react-icons/fa6";
+import { Top50Data } from "../top50/instagram/page";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface EngagementData {
   username: string;
@@ -18,20 +20,10 @@ interface EngagementData {
   engagementRate: number;
 }
 
-interface TopEngagementData {
-  lastScraped: string | null;
-  data: {
-    username: string;
-    followers: string;
-    engagementRate: string;
-  }[];
-}
-
 export default function Analytics() {
   const [user] = useAuthState(auth);
   const [username, setUsername] = useState("");
   const [result, setResult] = useState<EngagementData | null>(null);
-  const [topResult, setTopResult] = useState<TopEngagementData | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Fetches engagement data for the given Instagram user
@@ -61,32 +53,6 @@ export default function Analytics() {
     }
   };
 
-  // Fetches top engagement data
-  const getTopEngagement = async () => {
-    try {
-      const token = await user?.getIdToken(true); // Get user token
-
-      // API call to fetch top Instagram data
-      const response = await axios.get(
-        `http://localhost:5000/api/topInstagram`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      // Store top result
-      setTopResult(response.data);
-    } catch (error) {
-      console.error("Error fetching top engagement data:", error);
-    }
-  };
-
-  useEffect(() => {
-    getTopEngagement();
-  }, []);
-
   return (
     <main className="bg-accent">
       <section className="container flex flex-col min-h-screen gap-4 py-12 prose prose-lg lg:flex-row">
@@ -97,11 +63,11 @@ export default function Analytics() {
             setUsername={setUsername}
             calculateEngagement={calculateEngagement}
           />
-          {loading && <EngagementLoading />}
-          {result && !loading && <EngagementResult result={result} />}
+
+          <EngagementResult loading={loading} result={result} />
         </div>
         <div className="flex-1">
-          {topResult && <TopEngagement topResult={topResult} />}
+          <TopEngagement />
         </div>
       </section>
     </main>
@@ -137,16 +103,23 @@ function EngagementForm({
   );
 }
 
-function EngagementLoading() {
-  return (
-    <div className="flex items-center gap-2">
-      <FaSpinner className="inline animate-spin" />
-      <p className="mb-00">Getting instagram data, Please wait...</p>
-    </div>
-  );
+interface EngagementResultProps {
+  result: EngagementData | null;
+  loading: boolean;
 }
 
-function EngagementResult({ result }: { result: EngagementData }) {
+function EngagementResult({ result, loading }: EngagementResultProps) {
+  if (loading) {
+    return (
+      <div className="flex items-center gap-2">
+        <FaSpinner className="inline animate-spin" />
+        <p className="mb-00">Getting instagram data, Please wait...</p>
+      </div>
+    );
+  }
+
+  if (!result) return null;
+
   return (
     <div className="grid w-full grid-cols-1 gap-4 pt-8 md:grid-cols-2">
       <Card className="flex flex-col items-center justify-center p-12 md:col-span-2">
@@ -189,9 +162,58 @@ function EngagementResult({ result }: { result: EngagementData }) {
   );
 }
 
-function TopEngagement({ topResult }: { topResult: TopEngagementData }) {
+function TopEngagement() {
+  const [user] = useAuthState(auth);
+  const [topResult, setTopResult] = useState<Top50Data | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetches top engagement data
+  const getTopEngagement = async () => {
+    try {
+      // Get user token
+      const token = await user?.getIdToken(true);
+
+      setLoading(true);
+
+      // API call to fetch top Instagram data
+      const response = await axios.get(
+        `http://localhost:5000/api/top50/instagram`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      // Store top result
+      setTopResult(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching top engagement data:", error);
+    }
+  };
+
+  useEffect(() => {
+    getTopEngagement();
+  }, []);
+
+  if (loading) {
+    return (
+      <Card className="px-6 h-[80vh] overflow-y-scroll">
+        <h4>Top Instagram Accounts This Month</h4>
+        <table className="flex flex-col gap-2">
+          {[...Array(50)].map((_, index) => (
+            <Skeleton key={index} className="w-full h-8" />
+          ))}
+        </table>
+      </Card>
+    );
+  }
+
+  if (!topResult) return null;
+
   return (
-    <Card className="px-8 h-[80vh] box-border overflow-y-scroll">
+    <Card className="px-6 h-[80vh] overflow-y-scroll">
       <h4>Top Instagram Accounts This Month</h4>
       <table>
         {topResult.data.length > 0 && (

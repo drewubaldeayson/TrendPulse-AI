@@ -2,7 +2,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
 
-export default function Top50Instagram() {
+export interface Top50Data {
+  lastScraped: string | null;
+  data: {
+    username: string;
+    followers: string;
+    engagementRate: string;
+  }[];
+}
+
+export default function Top50() {
   return (
     <main className="min-h-screen bg-accent">
       <div className="container flex flex-col gap-8 py-16">
