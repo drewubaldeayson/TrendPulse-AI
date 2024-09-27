@@ -8,7 +8,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaSpinner } from "react-icons/fa6";
-import { Top50Data } from "../top50/instagram/page";
+import { Top50Data } from "../top50/page";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface EngagementData {

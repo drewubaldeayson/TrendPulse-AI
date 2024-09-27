@@ -6,8 +6,6 @@ import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
 dotenv.config();
 
-const TOP_50_DATA_FILE = path.join(__dirname, "top50Data.json");
-
 interface Top50Data {
   lastScraped: string | null;
   data: {
@@ -32,15 +30,17 @@ const shouldScrapeTop50Data = (lastScraped: Top50Data["lastScraped"]) => {
   return !isSameMonth;
 };
 
-const loadTop50Data = async () => {
-  if (!fs.existsSync(TOP_50_DATA_FILE)) {
+const loadTop50Data = async (platform: string) => {
+  const dataDir = path.join(__dirname, `top50-${platform}.json`);
+  if (!fs.existsSync(dataDir)) {
     return { lastScraped: null, data: [] } as Top50Data;
   }
-  return JSON.parse(fs.readFileSync(TOP_50_DATA_FILE, "utf8")) as Top50Data;
+  return JSON.parse(fs.readFileSync(dataDir, "utf8")) as Top50Data;
 };
 
-const saveTop50Data = async (data: Top50Data) => {
-  fs.writeFileSync(TOP_50_DATA_FILE, JSON.stringify(data, null, 2));
+const saveTop50Data = async (data: Top50Data, platform: string) => {
+  const dataDir = path.join(__dirname, `top50-${platform}.json`);
+  fs.writeFileSync(dataDir, JSON.stringify(data, null, 2));
 };
 
 const scrapeTop50Data = async (page: PageWithCursor) => {
@@ -55,11 +55,11 @@ const scrapeTop50Data = async (page: PageWithCursor) => {
           "div.misc > div:nth-child(1) > div.value"
         )?.textContent;
 
-        const nameLink = handle.querySelector(
+        const usernameLink = handle.querySelector(
           "div.name > a"
         ) as HTMLAnchorElement;
-        const regex = /instagram\.com\/(.+)/;
-        const hrefMatch = nameLink?.href.match(regex);
+        const regex = /\/(?:@)?([^\/]+)\/?$/;
+        const hrefMatch = usernameLink?.href.match(regex);
         const username = hrefMatch ? hrefMatch[1] : null;
 
         return {
@@ -94,7 +94,7 @@ const scrapeTop50Page = async (url: string) => {
 
 const scrapeTop50 = async (platform: string): Promise<Top50Data> => {
   const top50Url = `https://phlanx.com/top-lists/${platform}/top-50-followed`;
-  const top50Data = await loadTop50Data();
+  const top50Data = await loadTop50Data(platform);
 
   if (shouldScrapeTop50Data(top50Data.lastScraped)) {
     const newData = await scrapeTop50Page(top50Url);
@@ -103,7 +103,7 @@ const scrapeTop50 = async (platform: string): Promise<Top50Data> => {
       data: newData,
     } as Top50Data;
 
-    saveTop50Data(updatedData);
+    saveTop50Data(updatedData, platform);
     return updatedData;
   }
 

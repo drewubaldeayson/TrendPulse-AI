@@ -7,6 +7,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { notFound, useSearchParams } from "next/navigation";
 
 export interface Top50Data {
   lastScraped: string | null;
@@ -18,31 +19,39 @@ export interface Top50Data {
 }
 
 export default function Top50() {
+  const searchParams = useSearchParams();
+  const platform = searchParams.get("p");
   return (
     <main className="min-h-screen bg-accent">
       <div className="container flex flex-col gap-8 py-16">
-        <TitleSection />
+        <TitleSection platform={platform} />
         <div className="flex gap-4 flex-col md:flex-row">
           <MenuSection />
-          <TableSection />
+          <TableSection platform={platform} />
         </div>
       </div>
     </main>
   );
 }
 
-function TitleSection() {
+function TitleSection({ platform }: { platform: string | null }) {
   return (
     <div className="prose">
-      <h2>Top 50 Followed Instagram Users</h2>
+      <h2 className="capitalize">Top 50 Followed {platform} Users</h2>
     </div>
   );
 }
 
-function TableSection() {
+function TableSection({ platform }: { platform: string | null }) {
   const [user] = useAuthState(auth);
   const [topResult, setTopResult] = useState<Top50Data | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const allowedPlatforms = ["instagram", "tiktok", "twitch"];
+
+  if (!platform || !allowedPlatforms.includes(platform)) {
+    return notFound();
+  }
 
   // Fetches top engagement data
   const getTopEngagement = async () => {
@@ -53,8 +62,10 @@ function TableSection() {
       setLoading(true);
 
       // API call to fetch top Instagram data
+      console.log(platform);
+
       const response = await axios.get(
-        "http://localhost:5000/api/top50/instagram",
+        `http://localhost:5000/api/top50/${platform}`,
         {
           headers: {
             Authorization: token,
@@ -72,7 +83,7 @@ function TableSection() {
 
   useEffect(() => {
     getTopEngagement();
-  }, []);
+  }, [platform]);
 
   if (loading) {
     return (
@@ -130,17 +141,17 @@ function MenuSection() {
         <MenuLink
           title="Instagram"
           label="Top 50 Followed Instagram Users"
-          href="/top50/instagram"
-        />
-        <MenuLink
-          title="Facebook"
-          label="Top 50 Followed Facebook Users"
-          href="/top50/twitch"
+          href="/top50?p=instagram"
         />
         <MenuLink
           title="Tiktok"
           label="Top 50 Followed Tiktok Users"
-          href="/top50/tiktok"
+          href="/top50?p=tiktok"
+        />
+        <MenuLink
+          title="Twitch"
+          label="Top 50 Followed Twitch Users"
+          href="/top50?p=twitch"
         />
       </CardHeader>
     </Card>
