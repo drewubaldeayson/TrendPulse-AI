@@ -110,7 +110,7 @@ function ResponsiveMenu({ links }: ResponsiveMenuProps) {
 function Dropdown({ user }: { user: User }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button variant="outline">
           <span className="mr-1">{user.displayName}</span>
           <FaCaretDown />

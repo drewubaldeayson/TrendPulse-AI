@@ -1,6 +1,12 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { auth } from "@/lib/firebaseConfig";
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 export interface Top50Data {
   lastScraped: string | null;
@@ -34,58 +40,53 @@ function TitleSection() {
 }
 
 function TableSection() {
-  const dummyData = [
-    {
-      username: "instagram",
-      followers: "673.6M",
-      engagementRate: "0.03%",
-    },
-    {
-      username: "cristiano",
-      followers: "632.6M",
-      engagementRate: "0.90%",
-    },
-    {
-      username: "leomessi",
-      followers: "503.5M",
-      engagementRate: "0.67%",
-    },
-    {
-      username: "selenagomez",
-      followers: "426.8M",
-      engagementRate: "0.66%",
-    },
-    {
-      username: "kyliejenner",
-      followers: "399.1M",
-      engagementRate: "0.68%",
-    },
-    {
-      username: "therock",
-      followers: "397M",
-      engagementRate: "0.09%",
-    },
-    {
-      username: "arianagrande",
-      followers: "378.7M",
-      engagementRate: "0.61%",
-    },
-    {
-      username: "kimkardashian",
-      followers: "362.1M",
-      engagementRate: "0.25%",
-    },
-    {
-      username: "beyonce",
-      followers: "318.2M",
-      engagementRate: "0.36%",
-    },
-    {
-      username: "khloekardashian",
-      followers: "308.6M",
-      engagementRate: "0.00%",
-    },
-  ];
+  const [user] = useAuthState(auth);
+  const [topResult, setTopResult] = useState<Top50Data | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetches top engagement data
+  const getTopEngagement = async () => {
+    try {
+      // Get user token
+      const token = await user?.getIdToken(true);
+
+      setLoading(true);
+
+      // API call to fetch top Instagram data
+      const response = await axios.get(
+        "http://localhost:5000/api/top50/instagram",
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      // Store top result
+      setTopResult(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching top engagement data:", error);
+    }
+  };
+
+  useEffect(() => {
+    getTopEngagement();
+  }, []);
+
+  if (loading) {
+    return (
+      <Card className="prose flex-1">
+        <CardHeader>
+          {[...Array(50)].map((_, index) => (
+            <Skeleton key={index} className="w-full h-8" />
+          ))}
+        </CardHeader>
+      </Card>
+    );
+  }
+
+  if (!topResult) return null;
 
   return (
     <Card className="prose flex-1">
@@ -100,19 +101,19 @@ function TableSection() {
             </tr>
           </thead>
           <tbody>
-            {dummyData.map((data, index) => (
+            {topResult.data.map((result, index) => (
               <tr key={index}>
                 <td>#{index + 1}</td>
                 <td>
                   <Link
-                    href={`https://instagram.com/${data.username}`}
+                    href={`https://instagram.com/${result.username}`}
                     className="no-underline hover:underline"
                   >
-                    {data.username}
+                    {result.username}
                   </Link>
                 </td>
-                <td>{data.followers}</td>
-                <td>{data.engagementRate}</td>
+                <td>{result.followers}</td>
+                <td>{result.engagementRate}</td>
               </tr>
             ))}
           </tbody>
@@ -124,7 +125,7 @@ function TableSection() {
 
 function MenuSection() {
   return (
-    <Card className="min-w-72 prose prose-sm">
+    <Card className="min-w-72 prose prose-sm h-fit">
       <CardHeader>
         <MenuLink
           title="Instagram"
