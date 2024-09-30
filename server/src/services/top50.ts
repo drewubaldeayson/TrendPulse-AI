@@ -1,29 +1,26 @@
-import path from "path";
-import fs from "fs";
 import dotenv from "dotenv";
 import { connect, PageWithCursor } from "puppeteer-real-browser";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import { Influencer, initDB, Platform, Top50Data } from "./sqlite";
 
 dotenv.config();
 
-interface Top50Data {
-  lastScraped: string | null;
-  data: {
-    username: string;
-    followers: string;
-    engagementRate: string;
-  }[];
-}
-
-const delay = (timeout: number) =>
-  new Promise((resolve) => setTimeout(resolve, timeout));
+const db = initDB();
 
 const loadTop50Data = async (platform: string) => {
-  const dataDir = path.join(__dirname, `top50-${platform}.json`);
-  if (!fs.existsSync(dataDir)) {
+  const stmt = db.prepare(
+    "SELECT lastScraped, data FROM top50 WHERE platform = ?"
+  );
+  const row = stmt.get(platform) as Platform | undefined;
+
+  if (!row) {
     return { lastScraped: null, data: [] } as Top50Data;
   }
-  return JSON.parse(fs.readFileSync(dataDir, "utf8")) as Top50Data;
+
+  return {
+    lastScraped: row.lastScraped,
+    data: JSON.parse(row.data) as Influencer[],
+  } as Top50Data;
 };
 
 const shouldScrapeTop50Data = (lastScraped: Top50Data["lastScraped"]) => {
@@ -39,8 +36,19 @@ const shouldScrapeTop50Data = (lastScraped: Top50Data["lastScraped"]) => {
 };
 
 const saveTop50Data = async (data: Top50Data, platform: string) => {
-  const dataDir = path.join(__dirname, `top50-${platform}.json`);
-  fs.writeFileSync(dataDir, JSON.stringify(data, null, 2));
+  const stmt = db.prepare(`
+    INSERT INTO top50(platform, lastScraped, data)
+    VALUES (?, ?, ?)
+    ON CONFLICT(platform) DO UPDATE SET
+      lastScraped = excluded.lastScraped,
+      data = excluded.data
+  `);
+
+  // Convert InfluencerData[] to JSON string for storage
+  const jsonData = JSON.stringify(data.data);
+
+  // Execute the prepared statement with the necessary parameters
+  stmt.run(platform, data.lastScraped, jsonData);
 };
 
 const scrapeTop50Data = async (page: PageWithCursor) => {
@@ -66,13 +74,16 @@ const scrapeTop50Data = async (page: PageWithCursor) => {
           username,
           followers,
           engagementRate,
-        };
+        } as Influencer;
       }
     );
     return elements;
   });
   return handles;
 };
+
+const delay = (timeout: number) =>
+  new Promise((resolve) => setTimeout(resolve, timeout));
 
 const scrapeTop50Page = async (url: string) => {
   const { browser, page } = await connect({

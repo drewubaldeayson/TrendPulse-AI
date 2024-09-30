@@ -9,5 +9,5 @@
 # dist files
 /dist
 
-# src json files
-/src/*.json
+# db files
+**/*.db
