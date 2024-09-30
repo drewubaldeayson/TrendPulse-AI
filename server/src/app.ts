@@ -1,10 +1,10 @@
 import express, { NextFunction, Request, Response } from "express";
-import { admin, firestore } from "./firebase";
+import { admin, firestore } from "./services/firebase";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
-import { getChatGPTResponse } from "./chatgpt";
-import { scrapeInstagram } from "./instagram";
-import { scrapeTop50 } from "./top50";
+import { getChatGPTResponse } from "./services/chatgpt";
+import { scrapeInstagram } from "./services/instagram";
+import { scrapeTop50 } from "./services/top50";
 
 const app = express();
 

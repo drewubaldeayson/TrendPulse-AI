@@ -1,4 +1,4 @@
-import account from "../serviceAccount.json";
+import account from "../../serviceAccount.json";
 import admin from "firebase-admin";
 
 const serviceAccount = account as admin.ServiceAccount;
