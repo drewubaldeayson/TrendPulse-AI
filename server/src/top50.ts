@@ -18,6 +18,14 @@ interface Top50Data {
 const delay = (timeout: number) =>
   new Promise((resolve) => setTimeout(resolve, timeout));
 
+const loadTop50Data = async (platform: string) => {
+  const dataDir = path.join(__dirname, `top50-${platform}.json`);
+  if (!fs.existsSync(dataDir)) {
+    return { lastScraped: null, data: [] } as Top50Data;
+  }
+  return JSON.parse(fs.readFileSync(dataDir, "utf8")) as Top50Data;
+};
+
 const shouldScrapeTop50Data = (lastScraped: Top50Data["lastScraped"]) => {
   if (!lastScraped) {
     return true;
@@ -28,14 +36,6 @@ const shouldScrapeTop50Data = (lastScraped: Top50Data["lastScraped"]) => {
   const isSameMonth = lastDate.getMonth() === currentDate.getMonth();
 
   return !isSameMonth;
-};
-
-const loadTop50Data = async (platform: string) => {
-  const dataDir = path.join(__dirname, `top50-${platform}.json`);
-  if (!fs.existsSync(dataDir)) {
-    return { lastScraped: null, data: [] } as Top50Data;
-  }
-  return JSON.parse(fs.readFileSync(dataDir, "utf8")) as Top50Data;
 };
 
 const saveTop50Data = async (data: Top50Data, platform: string) => {
