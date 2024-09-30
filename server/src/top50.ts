@@ -93,10 +93,10 @@ const scrapeTop50Page = async (url: string) => {
 };
 
 const scrapeTop50 = async (platform: string): Promise<Top50Data> => {
-  const top50Url = `https://phlanx.com/top-lists/${platform}/top-50-followed`;
   const top50Data = await loadTop50Data(platform);
 
   if (shouldScrapeTop50Data(top50Data.lastScraped)) {
+    const top50Url = `https://phlanx.com/top-lists/${platform}/top-50-followed`;
     const newData = await scrapeTop50Page(top50Url);
     const updatedData = {
       lastScraped: new Date().toISOString(),
