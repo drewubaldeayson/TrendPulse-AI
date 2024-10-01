@@ -95,7 +95,7 @@ function TitleSection() {
               <p key={index}>
                 <b>{feature.title}</b>
                 <br />
-                {feature.description}
+                <span className="hidden md:inline">{feature.description}</span>
               </p>
             ))}
           </div>
