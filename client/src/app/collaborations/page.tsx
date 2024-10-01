@@ -20,17 +20,6 @@ export default function CollaborationsPage() {
 }
 
 function TitleSection() {
-  return (
-    <section className="flex justify-between items-center">
-      <div className="prose">
-        <h2>Collaborations</h2>
-      </div>
-      <CreateCollaborationButton />
-    </section>
-  );
-}
-
-function CreateCollaborationButton() {
   const features = [
     {
       title: "✔️ Engagement Calculators",
@@ -80,33 +69,38 @@ function CreateCollaborationButton() {
   ];
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Create Collaboration</Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-sm md:max-w-xl">
-        <DialogHeader className="items-center">
-          <DialogTitle>Oops! You need to be subscribed.</DialogTitle>
-          <DialogDescription>
-            Sign up for 30 days free trial to get full access.
-          </DialogDescription>
-        </DialogHeader>
+    <section className="flex justify-between items-center">
+      <div className="prose">
+        <h2>Collaborations</h2>
+      </div>
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button variant="outline">Create Collaboration</Button>
+        </DialogTrigger>
+        <DialogContent className="max-w-sm md:max-w-xl">
+          <DialogHeader className="items-center">
+            <DialogTitle>Oops! You need to be subscribed.</DialogTitle>
+            <DialogDescription>
+              Sign up for 30 days free trial to get full access.
+            </DialogDescription>
+          </DialogHeader>
 
-        <Button className="mx-16">
-          <Link href="/sign-up">Sign Up Now</Link>
-        </Button>
+          <Button className="mx-16">
+            <Link href="/sign-up">Sign Up Now</Link>
+          </Button>
 
-        <div className="prose prose-sm">
-          <p>Other features you'll also get full access to:</p>
-          {features.map((feature, index) => (
-            <p key={index}>
-              <b>{feature.title}</b>
-              <br />
-              {feature.description}
-            </p>
-          ))}
-        </div>
-      </DialogContent>
-    </Dialog>
+          <div className="prose prose-sm">
+            <p>Other features you'll also get full access to:</p>
+            {features.map((feature, index) => (
+              <p key={index}>
+                <b>{feature.title}</b>
+                <br />
+                {feature.description}
+              </p>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </section>
   );
 }
