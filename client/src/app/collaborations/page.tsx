@@ -16,7 +16,7 @@ export default function CollaborationsPage() {
     <main className="bg-accent">
       <div className="container flex flex-col min-h-screen gap-8 py-8">
         <TitleSection />
-        <div className="flex flex-col gap-8 lg:flex-row">
+        <div className="flex flex-col gap-4 lg:flex-row">
           <SidePanel />
           <ContentPanel />
         </div>
