@@ -16,7 +16,7 @@ export default function CollaborationsPage() {
     <main className="bg-accent">
       <div className="container flex flex-col min-h-screen gap-8 py-8">
         <TitleSection />
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col gap-8 lg:flex-row">
           <SidePanel />
           <ContentPanel />
         </div>
@@ -240,7 +240,7 @@ function ContentPanel() {
                       {post.budget}$
                     </span>
                   </p>
-                  <p className="p-2 bg-accent rounded shadow">{post.type}</p>
+                  <p className="p-2 rounded shadow bg-accent">{post.type}</p>
                   <p>{post.description}</p>
                 </div>
               </CardHeader>

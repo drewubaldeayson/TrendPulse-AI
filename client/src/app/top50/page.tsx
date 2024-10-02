@@ -20,7 +20,7 @@ export interface Top50Data {
 
 export default function Top50() {
   const searchParams = useSearchParams();
-  const platform = searchParams.get("p");
+  const platform = searchParams.get("p") || "instagram";
   return (
     <main className="min-h-screen bg-accent">
       <div className="container flex flex-col gap-8 py-16">
@@ -42,14 +42,14 @@ function TitleSection({ platform }: { platform: string | null }) {
   );
 }
 
-function TableSection({ platform }: { platform: string | null }) {
+function TableSection({ platform }: { platform: string }) {
   const [user] = useAuthState(auth);
   const [topResult, setTopResult] = useState<Top50Data | null>(null);
   const [loading, setLoading] = useState(true);
 
   const allowedPlatforms = ["instagram", "tiktok", "twitch"];
 
-  if (!platform || !allowedPlatforms.includes(platform)) {
+  if (!allowedPlatforms.includes(platform)) {
     return notFound();
   }
 
@@ -62,7 +62,6 @@ function TableSection({ platform }: { platform: string | null }) {
       setLoading(true);
 
       // API call to fetch top Instagram data
-      console.log(platform);
 
       const response = await axios.get(
         `http://localhost:5000/api/top50/${platform}`,

@@ -20,12 +20,17 @@ export default function Navbar() {
   const unauthorizedLinks = [
     { href: "/pricing", label: "Pricing" },
     { href: "/faq", label: "FAQ" },
+    { href: "/collaborations", label: "Collaborations" },
+
     { href: "/sign-in", label: "Sign In" },
   ];
 
   const authorizedLinks = [
     { href: "/pricing", label: "Pricing" },
     { href: "/faq", label: "FAQ" },
+    { href: "/collaborations", label: "Collaborations" },
+
+    { href: "/top50", label: "Top Lists" },
     { href: "/chat", label: "Chat" },
     { href: "/templates", label: "Templates" },
     { href: "/analytics", label: "Analytics" },
@@ -35,7 +40,7 @@ export default function Navbar() {
     return (
       <nav className="sticky top-0 z-50 flex items-center justify-between h-16 px-2 border bg-primary-foreground">
         <Logo />
-        <div className="flex flex-row-reverse gap-2 md:flex-row">
+        <div className="flex flex-row-reverse gap-2 lg:flex-row">
           <ResponsiveMenu links={unauthorizedLinks} />
         </div>
       </nav>
@@ -45,7 +50,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 flex items-center justify-between h-16 px-2 border bg-primary-foreground">
       <Logo />
-      <div className="flex flex-row-reverse gap-2 md:flex-row">
+      <div className="flex flex-row-reverse gap-2 lg:flex-row">
         <ResponsiveMenu links={authorizedLinks} />
         <Dropdown user={user} />
       </div>
@@ -70,15 +75,17 @@ interface ResponsiveMenuProps {
 function ResponsiveMenu({ links }: ResponsiveMenuProps) {
   return (
     <div className="flex items-center">
-      <div className="hidden md:flex">
+      <div className="hidden lg:flex">
         {links.map((link, idx) => (
           <Link key={idx} href={link.href}>
-            <Button variant="ghost">{link.label}</Button>
+            <Button variant="ghost" size="sm">
+              {link.label}
+            </Button>
           </Link>
         ))}
       </div>
 
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline">
