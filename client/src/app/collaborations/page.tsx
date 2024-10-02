@@ -1,5 +1,7 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -8,8 +10,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import clsx from "clsx";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function CollaborationsPage() {
   return (
@@ -112,11 +116,58 @@ function TitleSection() {
 }
 
 function SidePanel() {
+  const categories = [
+    "Beauty",
+    "Beverage",
+    "Business",
+    "Entertainment",
+    "Family",
+    "Fashion",
+    "Fitness",
+    "Food",
+    "Health",
+    "Home",
+    "Lifestyle",
+    "Technology",
+    "Other",
+  ];
+
+  const [checkedCategories, setCheckedCategories] = useState(
+    categories.reduce((accumulator: Record<string, boolean>, category) => {
+      accumulator[category] = false;
+      return accumulator;
+    }, {})
+  );
+
+  const handleCheckboxChange = (category: string, checked: boolean) => {
+    setCheckedCategories((prev) => ({
+      ...prev,
+      [category]: checked,
+    }));
+  };
+
   return (
     <Card className="min-w-72">
       <CardHeader>
         <div className="prose-sm prose">
           <h3>Filter</h3>
+          <hr className="my-4" />
+          <Input placeholder="Search" />
+          <h4>Category</h4>
+          <div className="flex flex-col gap-2">
+            {categories.map((category) => (
+              <div key={category} className="items-center flex gap-2">
+                <Checkbox
+                  id={category}
+                  checked={checkedCategories[category]}
+                  onCheckedChange={(checked) =>
+                    handleCheckboxChange(category, !!checked)
+                  }
+                />
+                <label htmlFor={category}>{category}</label>
+              </div>
+            ))}
+          </div>
         </div>
       </CardHeader>
     </Card>
