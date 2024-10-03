@@ -116,6 +116,34 @@ function TitleSection() {
 }
 
 function SidePanel() {
+  const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
+
+  return (
+    <Card className="min-w-72">
+      <CardHeader>
+        <div className="prose-sm prose">
+          <h3>Filter</h3>
+          <hr className="my-4" />
+          <Input placeholder="Search" />
+          <CategoriesList
+            checkedCategories={checkedCategories}
+            setCheckedCategories={setCheckedCategories}
+          />
+        </div>
+      </CardHeader>
+    </Card>
+  );
+}
+
+interface CategoriesListProps {
+  checkedCategories: string[];
+  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
+}
+
+function CategoriesList({
+  checkedCategories,
+  setCheckedCategories,
+}: CategoriesListProps) {
   const categories = [
     "Beauty",
     "Beverage",
@@ -131,38 +159,6 @@ function SidePanel() {
     "Technology",
     "Other",
   ];
-
-  const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
-
-  return (
-    <Card className="min-w-72">
-      <CardHeader>
-        <div className="prose-sm prose">
-          <h3>Filter</h3>
-          <hr className="my-4" />
-          <Input placeholder="Search" />
-          <CategoriesList
-            categories={categories}
-            checkedCategories={checkedCategories}
-            setCheckedCategories={setCheckedCategories}
-          />
-        </div>
-      </CardHeader>
-    </Card>
-  );
-}
-
-interface CategoriesListProps {
-  categories: string[];
-  checkedCategories: string[];
-  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
-}
-
-function CategoriesList({
-  categories,
-  checkedCategories,
-  setCheckedCategories,
-}: CategoriesListProps) {
   const handleCheckboxChange = (category: string, checked: boolean) => {
     if (checked) {
       // Add the category to the list if checked
