@@ -171,8 +171,6 @@ function CategoriesList({
     }
   };
 
-  console.log(checkedCategories);
-
   return (
     <div className="flex flex-col gap-2">
       {categories.map((category) => (
