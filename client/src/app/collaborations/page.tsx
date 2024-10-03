@@ -23,12 +23,37 @@ import Link from "next/link";
 import { Dispatch, SetStateAction, useState } from "react";
 
 export default function CollaborationsPage() {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<string>("N/A");
+  const [selectedType, setSelectedType] = useState<string>("N/A");
+  const [checkedReimbursments, setCheckedReimbursments] = useState<string[]>(
+    []
+  );
+
+  console.log({
+    searchQuery,
+    checkedCategories,
+    selectedLocation,
+    selectedType,
+    checkedReimbursments,
+  });
+
   return (
     <main className="bg-accent">
       <div className="container flex flex-col min-h-screen gap-8 py-8">
         <TitleSection />
         <div className="flex flex-col gap-4 lg:flex-row">
-          <SidePanel />
+          <SidePanel
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            checkedCategories={checkedCategories}
+            setCheckedCategories={setCheckedCategories}
+            setSelectedLocation={setSelectedLocation}
+            setSelectedType={setSelectedType}
+            checkedReimbursments={checkedReimbursments}
+            setCheckedReimbursments={setCheckedReimbursments}
+          />
           <ContentPanel />
         </div>
       </div>
@@ -122,28 +147,67 @@ function TitleSection() {
   );
 }
 
-function SidePanel() {
-  const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
-  const [checkedLocation, setCheckedLocation] = useState<string>("N/A");
+interface SidePanelProps {
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  checkedCategories: string[];
+  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
+  setSelectedLocation: Dispatch<SetStateAction<string>>;
+  setSelectedType: Dispatch<SetStateAction<string>>;
+  checkedReimbursments: string[];
+  setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
+}
 
+function SidePanel({
+  searchQuery,
+  setSearchQuery,
+  checkedCategories,
+  setCheckedCategories,
+  setSelectedLocation,
+  setSelectedType,
+  checkedReimbursments,
+  setCheckedReimbursments,
+}: SidePanelProps) {
   return (
-    <Card className="min-w-72">
+    <Card className="lg:w-72 h-fit">
       <CardHeader>
         <div className="prose-sm prose">
           <h3>Filter</h3>
           <hr className="my-4" />
-          <Input placeholder="Search" />
+          <Searchbar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
           <CategoriesList
             checkedCategories={checkedCategories}
             setCheckedCategories={setCheckedCategories}
           />
-          <LocationList setCheckedLocation={setCheckedLocation} />
+          <LocationList setSelectedLocation={setSelectedLocation} />
+          <TypeList setSelectedType={setSelectedType} />
+          <ReimbursementList
+            checkedReimbursments={checkedReimbursments}
+            setCheckedReimbursments={setCheckedReimbursments}
+          />
         </div>
       </CardHeader>
     </Card>
   );
 }
 
+interface SearchbarProps {
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+}
+
+function Searchbar({ searchQuery, setSearchQuery }: SearchbarProps) {
+  return (
+    <Input
+      placeholder="Search"
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+    />
+  );
+}
 interface CategoriesListProps {
   checkedCategories: string[];
   setCheckedCategories: Dispatch<SetStateAction<string[]>>;
@@ -181,7 +245,7 @@ function CategoriesList({
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       <h4>Categories</h4>
       {categories.map((category) => (
         <div key={category} className="items-center flex gap-2">
@@ -200,10 +264,10 @@ function CategoriesList({
 }
 
 interface LocationListProps {
-  setCheckedLocation: Dispatch<SetStateAction<string>>;
+  setSelectedLocation: Dispatch<SetStateAction<string>>;
 }
 
-function LocationList({ setCheckedLocation }: LocationListProps) {
+function LocationList({ setSelectedLocation }: LocationListProps) {
   const locations = [
     "N/A",
     "Afghanistan",
@@ -404,9 +468,9 @@ function LocationList({ setCheckedLocation }: LocationListProps) {
   ];
 
   return (
-    <div className="flex flex-col gap-2">
+    <div>
       <h4>Location</h4>
-      <Select onValueChange={setCheckedLocation}>
+      <Select onValueChange={setSelectedLocation}>
         <SelectTrigger>
           <SelectValue placeholder="Select a location" />
         </SelectTrigger>
@@ -418,6 +482,84 @@ function LocationList({ setCheckedLocation }: LocationListProps) {
           ))}
         </SelectContent>
       </Select>
+    </div>
+  );
+}
+
+interface TypeListProps {
+  setSelectedType: Dispatch<SetStateAction<string>>;
+}
+
+function TypeList({ setSelectedType }: TypeListProps) {
+  const types = [
+    "N/A",
+    "Brand to Brand Collaboration",
+    "Editorial Opportunity",
+    "Event Opportunities",
+    "I'm an Influencer looking for...",
+    "I'm offering product or service in exchange for...",
+    "Sponsorships",
+    "Product Call",
+    "Other",
+  ];
+
+  return (
+    <div>
+      <h4>Type</h4>
+      <Select onValueChange={setSelectedType}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a type" />
+        </SelectTrigger>
+        <SelectContent>
+          {types.map((type) => (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
+
+interface ReimbursementListProps {
+  checkedReimbursments: string[];
+  setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
+}
+
+function ReimbursementList({
+  checkedReimbursments,
+  setCheckedReimbursments,
+}: ReimbursementListProps) {
+  const reimbursements = ["Free Product", "Paid", "Unpaid"];
+
+  const handleCheckboxChange = (reimbursement: string, checked: boolean) => {
+    if (checked) {
+      // Add the category to the list if checked
+      setCheckedReimbursments((prev) => [...prev, reimbursement]);
+    } else {
+      // Remove the category from the list if unchecked
+      setCheckedReimbursments((prev) =>
+        prev.filter(
+          (checkedReimbursement) => checkedReimbursement !== reimbursement
+        )
+      );
+    }
+  };
+  return (
+    <div>
+      <h4>Reimbursement</h4>
+      {reimbursements.map((reimbursement) => (
+        <div key={reimbursement} className="items-center flex gap-2">
+          <Checkbox
+            checked={checkedReimbursments.includes(reimbursement)}
+            onCheckedChange={(checked) =>
+              handleCheckboxChange(reimbursement, !!checked)
+            }
+          />
+          <label htmlFor={reimbursement}>{reimbursement}</label>
+        </div>
+      ))}
     </div>
   );
 }
