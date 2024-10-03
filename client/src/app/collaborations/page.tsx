@@ -31,13 +31,23 @@ export default function CollaborationsPage() {
     []
   );
 
-  console.log({
-    searchQuery,
-    checkedCategories,
-    selectedLocation,
-    selectedType,
-    checkedReimbursments,
-  });
+  const handleSearch = () => {
+    console.log({
+      searchQuery,
+      checkedCategories,
+      selectedLocation,
+      selectedType,
+      checkedReimbursments,
+    });
+  };
+
+  const handleClear = () => {
+    setSearchQuery("");
+    setCheckedCategories([]);
+    setSelectedLocation("N/A");
+    setSelectedType("N/A");
+    setCheckedReimbursments([]);
+  };
 
   return (
     <main className="bg-accent">
@@ -49,10 +59,14 @@ export default function CollaborationsPage() {
             setSearchQuery={setSearchQuery}
             checkedCategories={checkedCategories}
             setCheckedCategories={setCheckedCategories}
+            selectedLocation={selectedLocation}
             setSelectedLocation={setSelectedLocation}
+            selectedType={selectedType}
             setSelectedType={setSelectedType}
             checkedReimbursments={checkedReimbursments}
             setCheckedReimbursments={setCheckedReimbursments}
+            handleSearch={handleSearch}
+            handleClear={handleClear}
           />
           <ContentPanel />
         </div>
@@ -152,10 +166,14 @@ interface SidePanelProps {
   setSearchQuery: Dispatch<SetStateAction<string>>;
   checkedCategories: string[];
   setCheckedCategories: Dispatch<SetStateAction<string[]>>;
+  selectedLocation: string;
   setSelectedLocation: Dispatch<SetStateAction<string>>;
+  selectedType: string;
   setSelectedType: Dispatch<SetStateAction<string>>;
   checkedReimbursments: string[];
   setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
+  handleSearch: () => void;
+  handleClear: () => void;
 }
 
 function SidePanel({
@@ -163,10 +181,14 @@ function SidePanel({
   setSearchQuery,
   checkedCategories,
   setCheckedCategories,
+  selectedLocation,
   setSelectedLocation,
+  selectedType,
   setSelectedType,
   checkedReimbursments,
   setCheckedReimbursments,
+  handleSearch,
+  handleClear,
 }: SidePanelProps) {
   return (
     <Card className="lg:w-72 h-fit">
@@ -182,12 +204,26 @@ function SidePanel({
             checkedCategories={checkedCategories}
             setCheckedCategories={setCheckedCategories}
           />
-          <LocationList setSelectedLocation={setSelectedLocation} />
-          <TypeList setSelectedType={setSelectedType} />
+          <LocationList
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+          />
+          <TypeList
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+          />
           <ReimbursementList
             checkedReimbursments={checkedReimbursments}
             setCheckedReimbursments={setCheckedReimbursments}
           />
+          <div className="flex justify-between mt-4 gap-2">
+            <Button onClick={handleSearch} className="flex-1">
+              Search
+            </Button>
+            <Button variant="outline" className="flex-1" onClick={handleClear}>
+              Clear
+            </Button>
+          </div>
         </div>
       </CardHeader>
     </Card>
@@ -264,10 +300,14 @@ function CategoriesList({
 }
 
 interface LocationListProps {
+  selectedLocation: string;
   setSelectedLocation: Dispatch<SetStateAction<string>>;
 }
 
-function LocationList({ setSelectedLocation }: LocationListProps) {
+function LocationList({
+  selectedLocation,
+  setSelectedLocation,
+}: LocationListProps) {
   const locations = [
     "N/A",
     "Afghanistan",
@@ -470,7 +510,7 @@ function LocationList({ setSelectedLocation }: LocationListProps) {
   return (
     <div>
       <h4>Location</h4>
-      <Select onValueChange={setSelectedLocation}>
+      <Select value={selectedLocation} onValueChange={setSelectedLocation}>
         <SelectTrigger>
           <SelectValue placeholder="Select a location" />
         </SelectTrigger>
@@ -487,10 +527,11 @@ function LocationList({ setSelectedLocation }: LocationListProps) {
 }
 
 interface TypeListProps {
+  selectedType: string;
   setSelectedType: Dispatch<SetStateAction<string>>;
 }
 
-function TypeList({ setSelectedType }: TypeListProps) {
+function TypeList({ selectedType, setSelectedType }: TypeListProps) {
   const types = [
     "N/A",
     "Brand to Brand Collaboration",
@@ -506,7 +547,7 @@ function TypeList({ setSelectedType }: TypeListProps) {
   return (
     <div>
       <h4>Type</h4>
-      <Select onValueChange={setSelectedType}>
+      <Select value={selectedType} onValueChange={setSelectedType}>
         <SelectTrigger>
           <SelectValue placeholder="Select a type" />
         </SelectTrigger>
