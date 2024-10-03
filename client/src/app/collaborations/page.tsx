@@ -11,6 +11,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectValue,
+  SelectItem,
+} from "@/components/ui/select";
 import clsx from "clsx";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -117,6 +124,9 @@ function TitleSection() {
 
 function SidePanel() {
   const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
+  const [checkedLocation, setCheckedLocation] = useState<string>("None");
+
+  console.log(checkedLocation);
 
   return (
     <Card className="min-w-72">
@@ -129,6 +139,7 @@ function SidePanel() {
             checkedCategories={checkedCategories}
             setCheckedCategories={setCheckedCategories}
           />
+          <LocationList setCheckedLocation={setCheckedLocation} />
         </div>
       </CardHeader>
     </Card>
@@ -173,6 +184,7 @@ function CategoriesList({
 
   return (
     <div className="flex flex-col gap-2">
+      <h4>Categories</h4>
       {categories.map((category) => (
         <div key={category} className="items-center flex gap-2">
           <Checkbox
@@ -185,6 +197,27 @@ function CategoriesList({
           <label htmlFor={category}>{category}</label>
         </div>
       ))}
+    </div>
+  );
+}
+
+interface LocationListProps {
+  setCheckedLocation: Dispatch<SetStateAction<string>>;
+}
+
+function LocationList({ setCheckedLocation }: LocationListProps) {
+  return (
+    <div className="flex flex-col gap-2">
+      <h4>Location</h4>
+      <Select onValueChange={setCheckedLocation}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a location" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="None">Select a location</SelectItem>
+          <SelectItem value="United States">United States</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
