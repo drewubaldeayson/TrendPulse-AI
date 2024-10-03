@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import clsx from "clsx";
 import Link from "next/link";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export default function CollaborationsPage() {
   return (
@@ -132,19 +132,7 @@ function SidePanel() {
     "Other",
   ];
 
-  const [checkedCategories, setCheckedCategories] = useState(
-    categories.reduce((accumulator: Record<string, boolean>, category) => {
-      accumulator[category] = false;
-      return accumulator;
-    }, {})
-  );
-
-  const handleCheckboxChange = (category: string, checked: boolean) => {
-    setCheckedCategories((prev) => ({
-      ...prev,
-      [category]: checked,
-    }));
-  };
+  const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
 
   return (
     <Card className="min-w-72">
@@ -153,24 +141,57 @@ function SidePanel() {
           <h3>Filter</h3>
           <hr className="my-4" />
           <Input placeholder="Search" />
-          <h4>Category</h4>
-          <div className="flex flex-col gap-2">
-            {categories.map((category) => (
-              <div key={category} className="items-center flex gap-2">
-                <Checkbox
-                  id={category}
-                  checked={checkedCategories[category]}
-                  onCheckedChange={(checked) =>
-                    handleCheckboxChange(category, !!checked)
-                  }
-                />
-                <label htmlFor={category}>{category}</label>
-              </div>
-            ))}
-          </div>
+          <CategoriesList
+            categories={categories}
+            checkedCategories={checkedCategories}
+            setCheckedCategories={setCheckedCategories}
+          />
         </div>
       </CardHeader>
     </Card>
+  );
+}
+
+interface CategoriesListProps {
+  categories: string[];
+  checkedCategories: string[];
+  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
+}
+
+function CategoriesList({
+  categories,
+  checkedCategories,
+  setCheckedCategories,
+}: CategoriesListProps) {
+  const handleCheckboxChange = (category: string, checked: boolean) => {
+    if (checked) {
+      // Add the category to the list if checked
+      setCheckedCategories((prev) => [...prev, category]);
+    } else {
+      // Remove the category from the list if unchecked
+      setCheckedCategories((prev) =>
+        prev.filter((checkedCategory) => checkedCategory !== category)
+      );
+    }
+  };
+
+  console.log(checkedCategories);
+
+  return (
+    <div className="flex flex-col gap-2">
+      {categories.map((category) => (
+        <div key={category} className="items-center flex gap-2">
+          <Checkbox
+            id={category}
+            checked={checkedCategories.includes(category)}
+            onCheckedChange={(checked) =>
+              handleCheckboxChange(category, !!checked)
+            }
+          />
+          <label htmlFor={category}>{category}</label>
+        </div>
+      ))}
+    </div>
   );
 }
 
