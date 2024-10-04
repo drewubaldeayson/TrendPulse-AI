@@ -10,6 +10,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -18,9 +26,19 @@ import {
   SelectValue,
   SelectItem,
 } from "@/components/ui/select";
+import { zodResolver } from "@hookform/resolvers/zod";
 import clsx from "clsx";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import features from "./features.json";
+import categories from "./categories.json";
+import locations from "./locations.json";
+import types from "./types.json";
+import reimbursements from "./reimbursements.json";
+import dummyData from "./dummyData.json";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function CollaborationsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -76,54 +94,6 @@ export default function CollaborationsPage() {
 }
 
 function TitleSection() {
-  const features = [
-    {
-      title: "✔️ Engagement Calculators",
-      description:
-        "Unlimited engagement searches for Instagram, TikTok, X(Twitter), Facebook, YouTube, and Twitch",
-    },
-    {
-      title: "✔️ Social Media Auditors",
-      description:
-        "Unlimited audits for Instagram, TikTok, and YouTube accounts",
-    },
-    {
-      title: "✔️ Brand Mentions",
-      description:
-        "Unlimited projects and keyword monitoring for the entire web",
-    },
-    {
-      title: "✔️ Influencer Directory",
-      description: "Search and contact over 100,000 influencers",
-    },
-    {
-      title: "✔️ Engagement Calculator Manager",
-      description: "Create informative lists for your social campaigns",
-    },
-    {
-      title: "✔️ Campaign Manager",
-      description: "Manage all your social media campaigns",
-    },
-    {
-      title: "✔️ Competitor Tracker",
-      description:
-        "Compare statistics of your competitors with simplified graphs",
-    },
-    {
-      title: "✔️ Collaborations",
-      description: "Post and respond to other brands and influencers' posts",
-    },
-    {
-      title: "✔️ Contracts",
-      description: "Generate unlimited contracts for your influencer campaigns",
-    },
-    {
-      title: "✔️ Dedicated user accounts",
-      description: "Unlimited access to Phlanx Complete",
-    },
-    { title: "✔️ Free 30 days trial", description: "" },
-  ];
-
   return (
     <section className="flex items-center justify-between">
       <div className="prose">
@@ -216,7 +186,7 @@ function SidePanel({
             checkedReimbursments={checkedReimbursments}
             setCheckedReimbursments={setCheckedReimbursments}
           />
-          <div className="flex justify-between mt-4 gap-2">
+          <div className="flex justify-between gap-2 mt-4">
             <Button onClick={handleSearch} className="flex-1">
               Search
             </Button>
@@ -253,27 +223,10 @@ function CategoriesList({
   checkedCategories,
   setCheckedCategories,
 }: CategoriesListProps) {
-  const categories = [
-    "Beauty",
-    "Beverage",
-    "Business",
-    "Entertainment",
-    "Family",
-    "Fashion",
-    "Fitness",
-    "Food",
-    "Health",
-    "Home",
-    "Lifestyle",
-    "Technology",
-    "Other",
-  ];
   const handleCheckboxChange = (category: string, checked: boolean) => {
     if (checked) {
-      // Add the category to the list if checked
       setCheckedCategories((prev) => [...prev, category]);
     } else {
-      // Remove the category from the list if unchecked
       setCheckedCategories((prev) =>
         prev.filter((checkedCategory) => checkedCategory !== category)
       );
@@ -283,8 +236,8 @@ function CategoriesList({
   return (
     <div>
       <h4>Categories</h4>
-      {categories.map((category) => (
-        <div key={category} className="items-center flex gap-2">
+      {categories.data.map((category) => (
+        <div key={category} className="flex items-center gap-2">
           <Checkbox
             id={category}
             checked={checkedCategories.includes(category)}
@@ -308,205 +261,6 @@ function LocationList({
   selectedLocation,
   setSelectedLocation,
 }: LocationListProps) {
-  const locations = [
-    "N/A",
-    "Afghanistan",
-    "Albania",
-    "Algeria",
-    "Andorra",
-    "Angola",
-    "Antigua and Barbuda",
-    "Argentina",
-    "Armenia",
-    "Australia",
-    "Austria",
-    "Azerbaijan",
-    "Bahamas",
-    "Bahrain",
-    "Bangladesh",
-    "Barbados",
-    "Belarus",
-    "Belgium",
-    "Belize",
-    "Benin",
-    "Bhutan",
-    "Bolivia",
-    "Bosnia and Herzegovina",
-    "Botswana",
-    "Brazil",
-    "Brunei",
-    "Bulgaria",
-    "Burkina Faso",
-    "Burundi",
-    "Cabo Verde",
-    "Cambodia",
-    "Cameroon",
-    "Canada",
-    "Central African Republic",
-    "Chad",
-    "Chile",
-    "China",
-    "Colombia",
-    "Comoros",
-    "Congo, Democratic Republic of the",
-    "Congo, Republic of the",
-    "Costa Rica",
-    "Croatia",
-    "Cuba",
-    "Cyprus",
-    "Czech Republic",
-    "Denmark",
-    "Djibouti",
-    "Dominica",
-    "Dominican Republic",
-    "Ecuador",
-    "Egypt",
-    "El Salvador",
-    "Equatorial Guinea",
-    "Eritrea",
-    "Estonia",
-    "Eswatini",
-    "Ethiopia",
-    "Fiji",
-    "Finland",
-    "France",
-    "Gabon",
-    "Gambia",
-    "Georgia",
-    "Germany",
-    "Ghana",
-    "Greece",
-    "Grenada",
-    "Guatemala",
-    "Guinea",
-    "Guinea-Bissau",
-    "Guyana",
-    "Haiti",
-    "Honduras",
-    "Hungary",
-    "Iceland",
-    "India",
-    "Indonesia",
-    "Iran",
-    "Iraq",
-    "Ireland",
-    "Israel",
-    "Italy",
-    "Jamaica",
-    "Japan",
-    "Jordan",
-    "Kazakhstan",
-    "Kenya",
-    "Kiribati",
-    "Korea, North",
-    "Korea, South",
-    "Kuwait",
-    "Kyrgyzstan",
-    "Laos",
-    "Latvia",
-    "Lebanon",
-    "Lesotho",
-    "Liberia",
-    "Libya",
-    "Liechtenstein",
-    "Lithuania",
-    "Luxembourg",
-    "Madagascar",
-    "Malawi",
-    "Malaysia",
-    "Maldives",
-    "Mali",
-    "Malta",
-    "Marshall Islands",
-    "Mauritania",
-    "Mauritius",
-    "Mexico",
-    "Micronesia",
-    "Moldova",
-    "Monaco",
-    "Mongolia",
-    "Montenegro",
-    "Morocco",
-    "Mozambique",
-    "Myanmar",
-    "Namibia",
-    "Nauru",
-    "Nepal",
-    "Netherlands",
-    "New Zealand",
-    "Nicaragua",
-    "Niger",
-    "Nigeria",
-    "North Macedonia",
-    "Norway",
-    "Oman",
-    "Pakistan",
-    "Palau",
-    "Palestine",
-    "Panama",
-    "Papua New Guinea",
-    "Paraguay",
-    "Peru",
-    "Philippines",
-    "Poland",
-    "Portugal",
-    "Qatar",
-    "Romania",
-    "Russia",
-    "Rwanda",
-    "Saint Kitts and Nevis",
-    "Saint Lucia",
-    "Saint Vincent and the Grenadines",
-    "Samoa",
-    "San Marino",
-    "Sao Tome and Principe",
-    "Saudi Arabia",
-    "Senegal",
-    "Serbia",
-    "Seychelles",
-    "Sierra Leone",
-    "Singapore",
-    "Slovakia",
-    "Slovenia",
-    "Solomon Islands",
-    "Somalia",
-    "South Africa",
-    "South Sudan",
-    "Spain",
-    "Sri Lanka",
-    "Sudan",
-    "Suriname",
-    "Sweden",
-    "Switzerland",
-    "Syria",
-    "Taiwan",
-    "Tajikistan",
-    "Tanzania",
-    "Thailand",
-    "Timor-Leste",
-    "Togo",
-    "Tonga",
-    "Trinidad and Tobago",
-    "Tunisia",
-    "Turkey",
-    "Turkmenistan",
-    "Tuvalu",
-    "Uganda",
-    "Ukraine",
-    "United Arab Emirates",
-    "United Kingdom",
-    "United States",
-    "Uruguay",
-    "Uzbekistan",
-    "Vanuatu",
-    "Vatican City",
-    "Venezuela",
-    "Vietnam",
-    "Yemen",
-    "Zambia",
-    "Zimbabwe",
-  ];
-
   return (
     <div>
       <h4>Location</h4>
@@ -515,7 +269,7 @@ function LocationList({
           <SelectValue placeholder="Select a location" />
         </SelectTrigger>
         <SelectContent>
-          {locations.map((location) => (
+          {locations.data.map((location) => (
             <SelectItem key={location} value={location}>
               {location}
             </SelectItem>
@@ -532,18 +286,6 @@ interface TypeListProps {
 }
 
 function TypeList({ selectedType, setSelectedType }: TypeListProps) {
-  const types = [
-    "N/A",
-    "Brand to Brand Collaboration",
-    "Editorial Opportunity",
-    "Event Opportunities",
-    "I'm an Influencer looking for...",
-    "I'm offering product or service in exchange for...",
-    "Sponsorships",
-    "Product Call",
-    "Other",
-  ];
-
   return (
     <div>
       <h4>Type</h4>
@@ -552,7 +294,7 @@ function TypeList({ selectedType, setSelectedType }: TypeListProps) {
           <SelectValue placeholder="Select a type" />
         </SelectTrigger>
         <SelectContent>
-          {types.map((type) => (
+          {types.data.map((type) => (
             <SelectItem key={type} value={type}>
               {type}
             </SelectItem>
@@ -572,14 +314,10 @@ function ReimbursementList({
   checkedReimbursments,
   setCheckedReimbursments,
 }: ReimbursementListProps) {
-  const reimbursements = ["Free Product", "Paid", "Unpaid"];
-
   const handleCheckboxChange = (reimbursement: string, checked: boolean) => {
     if (checked) {
-      // Add the category to the list if checked
       setCheckedReimbursments((prev) => [...prev, reimbursement]);
     } else {
-      // Remove the category from the list if unchecked
       setCheckedReimbursments((prev) =>
         prev.filter(
           (checkedReimbursement) => checkedReimbursement !== reimbursement
@@ -590,8 +328,8 @@ function ReimbursementList({
   return (
     <div>
       <h4>Reimbursement</h4>
-      {reimbursements.map((reimbursement) => (
-        <div key={reimbursement} className="items-center flex gap-2">
+      {reimbursements.data.map((reimbursement) => (
+        <div key={reimbursement} className="flex items-center gap-2">
           <Checkbox
             checked={checkedReimbursments.includes(reimbursement)}
             onCheckedChange={(checked) =>
@@ -606,91 +344,6 @@ function ReimbursementList({
 }
 
 function ContentPanel() {
-  const dummyData = [
-    {
-      id: 1,
-      name: "Jennifer Maldonado",
-      date: 1695945600,
-      company: "Jennifer Maldonado",
-      contact: "Jennifer Maldonado",
-      location: ["United States"],
-      link: "https://example.com/jennifer",
-      reimbursement: "Paid",
-      budget: 100,
-      type: "I'm an influencer looking for...",
-      description:
-        "Jennifer Maldonado is a vibrant US-based influencer with a growing community of 36k followers. She captivates her audience by blending product showcases with heartfelt glimpses into her life with her family.",
-      email: "jennifer@example.com",
-    },
-    {
-      id: 2,
-      name: "Kris PR",
-      date: 1690848000,
-      company: "Kris PR",
-      contact: "Kris PR",
-      location: ["United States", "United Kingdom", "Australia"],
-      link: null,
-      reimbursement: "Paid",
-      budget: 0,
-      type: "Brand to Brand Collaboration",
-      description:
-        "Kellog Company is bringing more snacks to sporting events. For large partnership requests or collaborations, contact Kris PR.",
-      email: "kris@kellogs.com",
-    },
-    {
-      id: 3,
-      name: "Mehmet",
-      date: 1690848000,
-      company: "Tuiste LLC",
-      contact: null,
-      location: ["United States"],
-      link: "https://example.com/tuiste",
-      reimbursement: "Paid",
-      budget: 200,
-      type: "I'm an influencer looking for...",
-      description:
-        "Tuiste LLC specializes in personalized name puzzles for babies. Mehmet seeks collaboration with influencers to promote these products.",
-      email: "mehmet@tuiste.com",
-    },
-    {
-      id: 4,
-      name: "Jeremie Dende",
-      date: 1696118400,
-      company: "Jeremie Dende",
-      contact: "Jeremie Dende",
-      location: [
-        "Belgium",
-        "France",
-        "Denmark",
-        "Netherlands",
-        "United Kingdom",
-        "Switzerland",
-      ],
-      link: null,
-      reimbursement: "Free Product",
-      budget: null,
-      type: "Sponsorships",
-      description:
-        "A four-day festival in Val d'Isère in April 2025, celebrating culture, adventure, and entertainment.",
-      email: "jeremie@hidden.com",
-    },
-    {
-      id: 5,
-      name: "Sophia Sterling",
-      date: 1695945600,
-      company: "Waist Shakers",
-      contact: "Sophia Sterling",
-      location: ["United States"],
-      link: "https://example.com/shakeitoff",
-      reimbursement: "Free Product",
-      budget: null,
-      type: "I'm offering product or service in exchange for...",
-      description:
-        "Earn 20% commission through a unique referral link as part of a campaign with over 40 million reach.",
-      email: "sophia@waistshakers.com",
-    },
-  ];
-
   return (
     <div className="flex flex-col flex-1 gap-4">
       <div className="prose-sm prose">
@@ -706,7 +359,7 @@ function ContentPanel() {
           });
           return (
             <Card key={post.id}>
-              <CardHeader>
+              <CardHeader className="flex flex-col justify-between h-full">
                 <div className="prose-sm prose">
                   <h4>{post.name}</h4>
                   <p className="m-0 text-sm opacity-75">{formattedDate}</p>
@@ -748,11 +401,142 @@ function ContentPanel() {
                   <p className="p-2 rounded shadow bg-accent">{post.type}</p>
                   <p>{post.description}</p>
                 </div>
+                <MessageDialog postName={post.name} postEmail={post.email} />
               </CardHeader>
             </Card>
           );
         })}
       </div>
     </div>
+  );
+}
+
+interface MessageDialogProps {
+  postName: string;
+  postEmail: string;
+}
+
+const messageDialogSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  link: z.string().url("Invalid URL"),
+  message: z.string().min(1, "Message is required"),
+  subject: z.string().min(1, "Subject is required"),
+});
+
+function MessageDialog({ postName, postEmail }: MessageDialogProps) {
+  const messageDialogForm = useForm<z.infer<typeof messageDialogSchema>>({
+    resolver: zodResolver(messageDialogSchema),
+    defaultValues: {
+      subject: postName || "",
+      name: "",
+      email: "",
+      link: "",
+      message: "",
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof messageDialogSchema>) {
+    console.log(values, postEmail);
+  }
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="w-full">Send a message</Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-sm md:max-w-xl">
+        <DialogHeader>
+          <DialogTitle>Send a message</DialogTitle>
+        </DialogHeader>
+
+        <Form {...messageDialogForm}>
+          <form
+            onSubmit={messageDialogForm.handleSubmit(onSubmit)}
+            className="space-y-4"
+          >
+            {/* Name Field */}
+            <FormField
+              control={messageDialogForm.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Email Field */}
+            <FormField
+              control={messageDialogForm.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Link Field */}
+            <FormField
+              control={messageDialogForm.control}
+              name="link"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Link</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter a link (URL)" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Subject Field */}
+            <FormField
+              control={messageDialogForm.control}
+              name="subject"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Subject</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter a subject" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Message Field */}
+            <FormField
+              control={messageDialogForm.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Message</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Enter your message" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Submit Button */}
+            <Button type="submit" className="w-full mt-4">
+              Send Message
+            </Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

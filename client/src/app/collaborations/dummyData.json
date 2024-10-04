@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "name": "Jennifer Maldonado",
+    "date": 1695945600,
+    "company": "Jennifer Maldonado",
+    "contact": "Jennifer Maldonado",
+    "location": ["United States"],
+    "link": "https://example.com/jennifer",
+    "reimbursement": "Paid",
+    "budget": 100,
+    "type": "I'm an influencer looking for...",
+    "description": "Jennifer Maldonado is a vibrant US-based influencer with a growing community of 36k followers. She captivates her audience by blending product showcases with heartfelt glimpses into her life with her family.",
+    "email": "jennifer@example.com"
+  },
+  {
+    "id": 2,
+    "name": "Kris PR",
+    "date": 1690848000,
+    "company": "Kris PR",
+    "contact": "Kris PR",
+    "location": ["United States", "United Kingdom", "Australia"],
+    "link": null,
+    "reimbursement": "Paid",
+    "budget": 0,
+    "type": "Brand to Brand Collaboration",
+    "description": "Kellog Company is bringing more snacks to sporting events. For large partnership requests or collaborations, contact Kris PR.",
+    "email": "kris@kellogs.com"
+  },
+  {
+    "id": 3,
+    "name": "Mehmet",
+    "date": 1690848000,
+    "company": "Tuiste LLC",
+    "contact": null,
+    "location": ["United States"],
+    "link": "https://example.com/tuiste",
+    "reimbursement": "Paid",
+    "budget": 200,
+    "type": "I'm an influencer looking for...",
+    "description": "Tuiste LLC specializes in personalized name puzzles for babies. Mehmet seeks collaboration with influencers to promote these products.",
+    "email": "mehmet@tuiste.com"
+  },
+  {
+    "id": 4,
+    "name": "Jeremie Dende",
+    "date": 1696118400,
+    "company": "Jeremie Dende",
+    "contact": "Jeremie Dende",
+    "location": [
+      "Belgium",
+      "France",
+      "Denmark",
+      "Netherlands",
+      "United Kingdom",
+      "Switzerland"
+    ],
+    "link": null,
+    "reimbursement": "Free Product",
+    "budget": null,
+    "type": "Sponsorships",
+    "description": "A four-day festival in Val d'Isère in April 2025, celebrating culture, adventure, and entertainment.",
+    "email": "jeremie@hidden.com"
+  },
+  {
+    "id": 5,
+    "name": "Sophia Sterling",
+    "date": 1695945600,
+    "company": "Waist Shakers",
+    "contact": "Sophia Sterling",
+    "location": ["United States"],
+    "link": "https://example.com/shakeitoff",
+    "reimbursement": "Free Product",
+    "budget": null,
+    "type": "I'm offering product or service in exchange for...",
+    "description": "Earn 20% commission through a unique referral link as part of a campaign with over 40 million reach.",
+    "email": "sophia@waistshakers.com"
+  }
+]
