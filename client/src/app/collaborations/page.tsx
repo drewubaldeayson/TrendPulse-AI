@@ -40,6 +40,59 @@ import reimbursements from "./reimbursements.json";
 import dummyData from "./dummyData.json";
 import { Textarea } from "@/components/ui/textarea";
 
+interface SidePanelProps {
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  checkedCategories: string[];
+  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
+  selectedLocation: string;
+  setSelectedLocation: Dispatch<SetStateAction<string>>;
+  selectedType: string;
+  setSelectedType: Dispatch<SetStateAction<string>>;
+  checkedReimbursments: string[];
+  setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
+  handleSearch: () => void;
+  handleClear: () => void;
+}
+
+interface SearchbarProps {
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+}
+
+interface CategoriesListProps {
+  checkedCategories: string[];
+  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
+}
+
+interface LocationListProps {
+  selectedLocation: string;
+  setSelectedLocation: Dispatch<SetStateAction<string>>;
+}
+
+interface TypeListProps {
+  selectedType: string;
+  setSelectedType: Dispatch<SetStateAction<string>>;
+}
+
+interface ReimbursementListProps {
+  checkedReimbursments: string[];
+  setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
+}
+
+interface MessageDialogProps {
+  postName: string;
+  postEmail: string;
+}
+
+const messageDialogSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+  link: z.string().url("Invalid URL"),
+  message: z.string().min(1, "Message is required"),
+  subject: z.string().min(1, "Subject is required"),
+});
+
 export default function CollaborationsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [checkedCategories, setCheckedCategories] = useState<string[]>([]);
@@ -131,21 +184,6 @@ function TitleSection() {
   );
 }
 
-interface SidePanelProps {
-  searchQuery: string;
-  setSearchQuery: Dispatch<SetStateAction<string>>;
-  checkedCategories: string[];
-  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
-  selectedLocation: string;
-  setSelectedLocation: Dispatch<SetStateAction<string>>;
-  selectedType: string;
-  setSelectedType: Dispatch<SetStateAction<string>>;
-  checkedReimbursments: string[];
-  setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
-  handleSearch: () => void;
-  handleClear: () => void;
-}
-
 function SidePanel({
   searchQuery,
   setSearchQuery,
@@ -200,11 +238,6 @@ function SidePanel({
   );
 }
 
-interface SearchbarProps {
-  searchQuery: string;
-  setSearchQuery: Dispatch<SetStateAction<string>>;
-}
-
 function Searchbar({ searchQuery, setSearchQuery }: SearchbarProps) {
   return (
     <Input
@@ -213,10 +246,6 @@ function Searchbar({ searchQuery, setSearchQuery }: SearchbarProps) {
       onChange={(e) => setSearchQuery(e.target.value)}
     />
   );
-}
-interface CategoriesListProps {
-  checkedCategories: string[];
-  setCheckedCategories: Dispatch<SetStateAction<string[]>>;
 }
 
 function CategoriesList({
@@ -252,11 +281,6 @@ function CategoriesList({
   );
 }
 
-interface LocationListProps {
-  selectedLocation: string;
-  setSelectedLocation: Dispatch<SetStateAction<string>>;
-}
-
 function LocationList({
   selectedLocation,
   setSelectedLocation,
@@ -280,11 +304,6 @@ function LocationList({
   );
 }
 
-interface TypeListProps {
-  selectedType: string;
-  setSelectedType: Dispatch<SetStateAction<string>>;
-}
-
 function TypeList({ selectedType, setSelectedType }: TypeListProps) {
   return (
     <div>
@@ -303,11 +322,6 @@ function TypeList({ selectedType, setSelectedType }: TypeListProps) {
       </Select>
     </div>
   );
-}
-
-interface ReimbursementListProps {
-  checkedReimbursments: string[];
-  setCheckedReimbursments: Dispatch<SetStateAction<string[]>>;
 }
 
 function ReimbursementList({
@@ -410,19 +424,6 @@ function ContentPanel() {
     </div>
   );
 }
-
-interface MessageDialogProps {
-  postName: string;
-  postEmail: string;
-}
-
-const messageDialogSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Invalid email address"),
-  link: z.string().url("Invalid URL"),
-  message: z.string().min(1, "Message is required"),
-  subject: z.string().min(1, "Subject is required"),
-});
 
 function MessageDialog({ postName, postEmail }: MessageDialogProps) {
   const messageDialogForm = useForm<z.infer<typeof messageDialogSchema>>({
