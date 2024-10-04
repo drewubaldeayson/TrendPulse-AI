@@ -613,7 +613,7 @@ function ContentPanel() {
       date: 1695945600,
       company: "Jennifer Maldonado",
       contact: "Jennifer Maldonado",
-      location: ["US"],
+      location: ["United States"],
       link: "https://example.com/jennifer",
       reimbursement: "Paid",
       budget: 100,
@@ -628,7 +628,7 @@ function ContentPanel() {
       date: 1690848000,
       company: "Kris PR",
       contact: "Kris PR",
-      location: ["US", "UK", "AU"],
+      location: ["United States", "United Kingdom", "Australia"],
       link: null,
       reimbursement: "Paid",
       budget: 0,
@@ -642,8 +642,8 @@ function ContentPanel() {
       name: "Mehmet",
       date: 1690848000,
       company: "Tuiste LLC",
-      contact: "Mehmet",
-      location: ["US"],
+      contact: null,
+      location: ["United States"],
       link: "https://example.com/tuiste",
       reimbursement: "Paid",
       budget: 200,
@@ -656,10 +656,17 @@ function ContentPanel() {
       id: 4,
       name: "Jeremie Dende",
       date: 1696118400,
-      company: "Hidden",
+      company: "Jeremie Dende",
       contact: "Jeremie Dende",
-      location: ["BE", "FR", "DE", "NL", "UK", "CH"],
-      link: "https://example.com/afrofest",
+      location: [
+        "Belgium",
+        "France",
+        "Denmark",
+        "Netherlands",
+        "United Kingdom",
+        "Switzerland",
+      ],
+      link: null,
       reimbursement: "Free Product",
       budget: null,
       type: "Sponsorships",
@@ -673,7 +680,7 @@ function ContentPanel() {
       date: 1695945600,
       company: "Waist Shakers",
       contact: "Sophia Sterling",
-      location: ["US"],
+      location: ["United States"],
       link: "https://example.com/shakeitoff",
       reimbursement: "Free Product",
       budget: null,
@@ -709,10 +716,26 @@ function ContentPanel() {
                     {post.company}
                     <br />
                     <b>Contact: </b>
-                    {post.contact}
+                    {post.contact ? (
+                      <span>{post.contact}</span>
+                    ) : (
+                      <i className="opacity-75">Hidden</i>
+                    )}
                     <br />
                     <b>Location: </b>
                     {post.location.join(", ")}
+                    <br />
+                    <b>Link: </b>
+                    {post.link ? (
+                      <Link
+                        href={post.link}
+                        className="no-underline hover:underline"
+                      >
+                        Visit Link
+                      </Link>
+                    ) : (
+                      <i className="opacity-75">Hidden</i>
+                    )}
                     <br />
                     <b>Reimbursement: </b>
                     {post.reimbursement}
