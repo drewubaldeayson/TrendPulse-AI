@@ -417,6 +417,19 @@ app.get(
 );
 
 /**
+ * Collaborations endpoint
+ * @route GET /api/collaborations
+ * @returns {Response} 200 - List of collaborations.
+ * @returns {Response} 500 - Error message if failed to retrieve data.
+ */
+
+app.get("/api/collaborations", async (req: Request, res: Response) => {
+  console.log(req.query);
+
+  res.json(req.query);
+});
+
+/**
  * Health check endpoint to verify server status.
  * @route GET /api/healthcheck
  * @param {AuthenticatedRequest} _req - The request object, extended with user information.

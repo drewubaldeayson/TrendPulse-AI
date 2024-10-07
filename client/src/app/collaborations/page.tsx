@@ -39,6 +39,7 @@ import types from "./types.json";
 import reimbursements from "./reimbursements.json";
 import dummyData from "./dummyData.json";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 
 interface SidePanelProps {
   searchQuery: string;
@@ -102,14 +103,25 @@ export default function CollaborationsPage() {
     []
   );
 
-  const handleSearch = () => {
-    console.log({
-      searchQuery,
-      checkedCategories,
-      selectedLocation,
-      selectedType,
-      checkedReimbursments,
-    });
+  const handleSearch = async () => {
+    try {
+      const params = {
+        query: searchQuery,
+        categories: checkedCategories,
+        location: selectedLocation,
+        type: selectedType,
+        reimbursements: checkedReimbursments,
+      };
+      const response = await axios.get(
+        "http://localhost:5000/api/collaborations",
+        {
+          params,
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleClear = () => {
